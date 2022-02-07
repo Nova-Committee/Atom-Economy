@@ -5,8 +5,8 @@ import committee.nova.atom.eco.common.config.ConfigUtil;
 import committee.nova.atom.eco.common.config.ModConfig;
 import committee.nova.atom.eco.common.items.ItemManager;
 import committee.nova.atom.eco.data.DataManager;
-import committee.nova.atom.eco.utils.Formatter;
-import committee.nova.atom.eco.utils.Print;
+import committee.nova.atom.eco.utils.FormatUtil;
+import committee.nova.atom.eco.utils.PrintUtil;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
@@ -30,7 +30,7 @@ public class PlayerEventHandler {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
 
         if(event.getPlayer().getCommandSenderWorld().isClientSide){ return; }
-        Print.debug("加载 " + event.getPlayer().getName() + " 的账户|| " + event.getPlayer().getGameProfile().getId().toString());
+        PrintUtil.debug("加载 " + event.getPlayer().getName() + " 的账户|| " + event.getPlayer().getGameProfile().getId().toString());
         Account account = DataManager.getAccount("player", event.getPlayer().getStringUUID(),  true);
         if(ModConfig.COMMON.NOTIFY_BALANCE_ON_JOIN.get()){
             event.getPlayer().sendMessage(new StringTextComponent("银行余额: " + ConfigUtil.getWorthAsString(account.getBalance())).withStyle(TextFormatting.BLUE), UUID.randomUUID());
@@ -41,7 +41,7 @@ public class PlayerEventHandler {
 
     @SubscribeEvent
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event){
-        Print.debug("保存 " + event.getPlayer().getName() + "的账户|| " + event.getPlayer().getGameProfile().getId().toString());
+        PrintUtil.debug("保存 " + event.getPlayer().getName() + "的账户|| " + event.getPlayer().getGameProfile().getId().toString());
         DataManager.unloadAccount("player", event.getPlayer().getGameProfile().getId().toString());
     }
 
@@ -55,6 +55,6 @@ public class PlayerEventHandler {
         if(event.getItemStack().getCount() > 1){
             str += " &8(&7" + ConfigUtil.getWorthAsString(worth * event.getItemStack().getCount(), true, worth < 10) + "&8)";
         }
-        event.getToolTip().add(new StringTextComponent(Formatter.format(str)));
+        event.getToolTip().add(new StringTextComponent(FormatUtil.format(str)));
     }
 }

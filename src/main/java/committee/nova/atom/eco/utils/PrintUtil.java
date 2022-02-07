@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
  * Date: 2022/1/20 9:53
  * Version: 1.0
  */
-public class Print {
+public class PrintUtil {
     private static final Logger logger = LogManager.getLogger("AtomL");
 
     public static void log(Object obj){

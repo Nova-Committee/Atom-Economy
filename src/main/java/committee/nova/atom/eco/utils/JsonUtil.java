@@ -118,7 +118,7 @@ public class JsonUtil {
             if(print_err){
                 e.printStackTrace();
             }
-            Print.console("File '" + file + "' seems to be missing, or has invalid format.");
+            PrintUtil.console("File '" + file + "' seems to be missing, or has invalid format.");
             return def;
         }
     }
@@ -281,7 +281,6 @@ public class JsonUtil {
      * Gets a value from a JsonObject if it exists, else returns null
      * @param obj
      * @param target
-     * @param default_value
      */
     public static String getStringIfExists(JsonObject obj, String target){
         if(obj.has(target)){
@@ -294,7 +293,6 @@ public class JsonUtil {
      * Gets a value from a JsonObject if it exists, else returns -1
      * @param obj
      * @param target
-     * @param default_value
      */
     public static Number getNumberIfExists(JsonObject obj, String target){
         if(obj.has(target)){
@@ -307,7 +305,6 @@ public class JsonUtil {
      * Gets a value from a JsonObject if it exists, else returns false
      * @param obj
      * @param target
-     * @param default_value
      */
     public static boolean getBooleanIfExists(JsonObject obj, String target){
         if(obj.has(target)){
@@ -320,7 +317,6 @@ public class JsonUtil {
      * Gets a JsonElement from a JsonObject if it exists, else returns null
      * @param obj
      * @param target
-     * @param default_value
      */
     public static JsonElement getIfExists(JsonObject obj, String target){
         if(!obj.has(target)){
@@ -393,7 +389,7 @@ public class JsonUtil {
     /**
      * Checks if JsonArray contains String.
      * @param array
-     * @param string
+     * @param number
      * @return
      */
     public static boolean contains(JsonArray array, Number number){

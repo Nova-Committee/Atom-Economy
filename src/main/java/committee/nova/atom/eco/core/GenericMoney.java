@@ -7,7 +7,7 @@ import committee.nova.atom.eco.Static;
 import committee.nova.atom.eco.api.Money;
 import committee.nova.atom.eco.utils.ItemUtil;
 import committee.nova.atom.eco.utils.JsonUtil;
-import committee.nova.atom.eco.utils.Print;
+import committee.nova.atom.eco.utils.PrintUtil;
 import committee.nova.atom.eco.utils.math.Time;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -38,7 +38,7 @@ public class GenericMoney implements Money {
             String id = JsonUtil.getIfExists(obj, "id", "invalid_" + obj.toString() + "_" + Time.getDate());
             item = ItemUtil.getByNameOrId(internal ? Eco.MOD_ID + ":" + id : id);
             if(item == null){
-                Print.log("[ATOME] ERROR - External Item with ID '" + regname.toString() + "' couldn't be found! This is bad!");
+                PrintUtil.log("[ATOME] ERROR - External Item with ID '" + regname.toString() + "' couldn't be found! This is bad!");
                 Static.halt();
             }
         }
@@ -48,7 +48,7 @@ public class GenericMoney implements Money {
                 compound = JsonToNBT.parseTag(obj.get("nbt").getAsString());
             }
             catch(CommandSyntaxException e){
-                Print.log("[ATOME] ERROR - Could not load NBT from config of '" + regname.toString() + "'! This is bad!");
+                PrintUtil.log("[ATOME] ERROR - Could not load NBT from config of '" + regname.toString() + "'! This is bad!");
                 Static.halt();
             }
         }

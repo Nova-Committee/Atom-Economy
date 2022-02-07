@@ -3,7 +3,7 @@ package committee.nova.atom.eco.common.items;
 import committee.nova.atom.eco.Eco;
 import committee.nova.atom.eco.api.Money;
 import committee.nova.atom.eco.common.config.ConfigUtil;
-import committee.nova.atom.eco.utils.Print;
+import committee.nova.atom.eco.utils.PrintUtil;
 import net.minecraft.command.ICommandSource;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,7 +29,7 @@ public class ItemManager {
         for(ItemStack stack : player.inventory.items){
             if(stack.isEmpty()) continue;
             long worth = ConfigUtil.getItemStackWorth(stack);
-            Print.debug(stack.toString(), stack.getItem() instanceof Money.Item ? ((Money.Item)stack.getItem()).getType().toString() : "not internal money item");
+            PrintUtil.debug(stack.toString(), stack.getItem() instanceof Money.Item ? ((Money.Item)stack.getItem()).getType().toString() : "not internal money item");
             value += worth * stack.getCount();
         }
         return value;
@@ -79,7 +79,7 @@ public class ItemManager {
         List<Money> list = Eco.getSortedMoneyList();
         Money money = null;
         for(int i = 0; i < list.size(); i++){
-            Print.debug(list.get(i).getWorth(), list.get(i).getRegistryName());
+            PrintUtil.debug(list.get(i).getWorth(), list.get(i).getRegistryName());
             while(amount - (money = list.get(i)).getWorth() >= 0){
                 ItemStack stack = money.getItemStack().copy();
                 if(hasSpace(player, false)){

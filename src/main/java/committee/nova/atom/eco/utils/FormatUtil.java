@@ -8,7 +8,7 @@ import net.minecraft.util.text.StringTextComponent;
  * Date: 2022/1/20 9:55
  * Version: 1.0
  */
-public class Formatter {
+public class FormatUtil {
     public static final String PARAGRAPH_SIGN = "\u00a7";
 
     public static String format(String string){

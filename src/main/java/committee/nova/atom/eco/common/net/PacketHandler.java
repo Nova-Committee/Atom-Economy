@@ -1,9 +1,6 @@
 package committee.nova.atom.eco.common.net;
 
 import committee.nova.atom.eco.Eco;
-import committee.nova.atom.eco.common.net.packets.JsonObjectPacket;
-import committee.nova.atom.eco.common.net.packets.ReplyGuiUpdatePacket;
-import committee.nova.atom.eco.common.net.packets.RequestGuiUpdateTagPacket;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -44,10 +41,6 @@ public class PacketHandler {
                 (version) -> version.equals(VERSION),
                 (version) -> version.equals(VERSION)
         );
-        INSTANCE.registerMessage(nextID(), JsonObjectPacket.class, JsonObjectPacket::toBytes, JsonObjectPacket::new, JsonObjectPacket::handle);
-        INSTANCE.registerMessage(nextID(), ReplyGuiUpdatePacket.class,ReplyGuiUpdatePacket::toBytes, ReplyGuiUpdatePacket::new, ReplyGuiUpdatePacket::handle);
-        INSTANCE.registerMessage(nextID(), RequestGuiUpdateTagPacket.class,RequestGuiUpdateTagPacket::toBytes, RequestGuiUpdateTagPacket::new, RequestGuiUpdateTagPacket::handle);
-
 
     }
 

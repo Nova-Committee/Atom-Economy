@@ -7,7 +7,7 @@ import committee.nova.atom.eco.data.DataManager;
 import committee.nova.atom.eco.init.ModBlocks;
 import committee.nova.atom.eco.init.ModItems;
 import committee.nova.atom.eco.utils.FileUtil;
-import committee.nova.atom.eco.utils.Print;
+import committee.nova.atom.eco.utils.PrintUtil;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -79,10 +79,10 @@ public class Eco {
 
     public static void loadDataManager(){
         if(isDataManagerLoaded()){
-            Print.debug("SKIPPING LOADING ATOME DATAMANAGER");
+            PrintUtil.debug("SKIPPING LOADING ATOME DATAMANAGER");
             return;
         }
-        Print.debug("LOADING ATOME DATAMANAGER");
+        PrintUtil.debug("LOADING ATOME DATAMANAGER");
         if(Eco.CACHE != null){
             Eco.CACHE.saveAll(); Eco.CACHE.clearAll();
         }
@@ -90,7 +90,7 @@ public class Eco {
     }
 
     public static void unloadDataManager(){
-        Print.debug("UN-LOADING ATOME DATAMANAGER");
+        PrintUtil.debug("UN-LOADING ATOME DATAMANAGER");
         if(Eco.CACHE != null){
             Eco.CACHE.saveAll();
             Eco.CACHE.clearAll();
