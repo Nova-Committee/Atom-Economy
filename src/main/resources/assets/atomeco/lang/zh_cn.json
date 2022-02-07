@@ -1,0 +1,36 @@
+{
+  "itemGroup.tabAtomEco": "基石：经济",
+  "block.atomeco.atm": "ATM机",
+  "item.atomeco.1yuan": "1圆",
+  "item.atomeco.2yuan": "2圆",
+  "item.atomeco.5yuan": "5圆",
+  "item.atomeco.10yuan": "10圆",
+  "item.atomeco.20yuan": "20圆",
+  "item.atomeco.50yuan": "50圆",
+  "item.atomeco.100yuan": "100圆",
+  "item.atomeco.200yuan": "200圆",
+  "item.atomeco.500yuan": "500圆",
+  "item.atomeco.1000yuan": "1000圆",
+
+
+  "gui.atomeco.index.transfer": "转账",
+  "gui.atomeco.index.withdraw": "取款",
+  "gui.atomeco.index.deposit": "存款",
+  "gui.atomeco.index.self_info": "个人信息",
+  "gui.atomeco.transfer.all_account": "所有账户",
+  "gui.atomeco.transfer.transfer_value": "转账的金额",
+  "gui.atomeco.transfer.search": "搜索账户",
+
+  "gui.atomeco.withdraw.withdraw_value": "取款的金额",
+
+  "gui.atomeco.deposit.deposit_value": "存款的金额",
+
+
+  "gui.atomeco.back" : "返回上一页",
+  "gui.atomeco.default_name": "请选择一个账户",
+  "gui.atomeco.transfer.tip": "要转账的账户:",
+  "gui.atomeco.bank_leave": "银行余额:",
+  "gui.atomeco.player_leave": "身上余额:"
+
+
+}

@@ -1,0 +1,15 @@
+{
+    "parent": "atomeco:block/atm",
+    "display": {
+        "gui": {
+            "rotation": [ 10, 185, 0 ],
+            "translation": [ 0, 1.5, -2.75 ],
+            "scale": [ 0.5, 0.5, 0.5 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 10, 185, 0 ],
+            "translation": [ 0, 1.5, -2.75 ],
+            "scale": [ 0.45, 0.45, 0.45 ]
+        }
+    }
+}

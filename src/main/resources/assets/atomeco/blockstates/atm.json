@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "atomeco:block/atm" },
+    "facing=south": { "model": "atomeco:block/atm", "y": 180 },
+    "facing=west": { "model": "atomeco:block/atm", "y": 270 },
+    "facing=east": { "model": "atomeco:block/atm", "y": 90 }
+  }
+}
