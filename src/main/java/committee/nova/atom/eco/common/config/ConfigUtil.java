@@ -64,7 +64,6 @@ public class ConfigUtil {
                 registry.registerAll(
                        MONEY = new GenericMoneyItem(money).setRegistryName( money.getRegistryName().getPath())
                 );
-                //FCLRegistry.getAutoRegistry("Eco").addItem(money.getRegistryName().getPath(), new GenericMoneyItem(money), 1, null);
                 money.stackload(ItemUtil.getByNameOrId("atomeco:" + money.getRegistryName().getPath()), elm.getAsJsonObject(), true);
             });
         }
@@ -187,10 +186,10 @@ public class ConfigUtil {
                     JsonObject jsn = elm.getAsJsonObject();
                     ResourceLocation rs = new ResourceLocation(jsn.get("id").getAsString());
                     long worth = jsn.get("worth").getAsLong();
-                        EXTERNAL_ITEMS_METAWORTH.put(rs.toString(), worth);
-                        if(!EXTERNAL_ITEMS.containsKey(rs)){
-                            EXTERNAL_ITEMS.put(rs, 0L);
-                        }
+                    EXTERNAL_ITEMS_METAWORTH.put(rs.toString(), worth);
+                    if(!EXTERNAL_ITEMS.containsKey(rs)){
+                        EXTERNAL_ITEMS.put(rs, 0L);
+                    }
                     else{
                         EXTERNAL_ITEMS.put(rs, worth);
                     }

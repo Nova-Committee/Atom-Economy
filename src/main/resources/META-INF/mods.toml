@@ -5,11 +5,10 @@ license="GNU AGPL 3.0"
 modId="atomeco" #mandatory
 version="${file.jarVersion}" #mandatory
 displayName="Atom Eco" #mandatory
-#logoFile="eco.png" #optional
-authors="cnlimiter" #optional
-# The description text for the mod (multi line!) (#mandatory)
+logoFile="eco.png" #optional
+authors="cnlimiter , radekemia" #optional
 description='''
-
+A simple economy system
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.atomeco]] #optional

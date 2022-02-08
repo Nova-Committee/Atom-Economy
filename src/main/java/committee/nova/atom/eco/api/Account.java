@@ -17,12 +17,12 @@ import java.util.UUID;
  * Version: 1.0
  */
 public class Account  implements Manageable{
-    private final String id;
-    private final String type;
-    private String bank;
-    private String name;
-    private long balance;
-    private JsonObject additionaldata;
+    private final String id; //玩家 uuid
+    private final String type; // 种类
+    private String bank; //对应银行
+    private String name; // 名字
+    private long balance; // 余额
+    private JsonObject additionaldata; // 附加数据
 
     /** 解析json文件 */
     public Account(JsonObject obj){
@@ -126,7 +126,7 @@ public class Account  implements Manageable{
                     MinecraftForge.EVENT_BUS.post(new AccountEvent.BalanceUpdated(this, balance, balance -= amount));
                 }
                 else{
-                    source.sendMessage(new StringTextComponent("没有足够的金额来扣除! (B:" + (balance / 1000) + " - S:" + (amount / 1000) + ")"), UUID.randomUUID());
+                    source.sendMessage(new StringTextComponent("没有足够的金额来扣除! (B:" + balance  + " - S:" + amount  + ")"), UUID.randomUUID());
                 }
                 return;
             }

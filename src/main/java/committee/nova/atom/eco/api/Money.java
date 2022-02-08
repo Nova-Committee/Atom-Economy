@@ -21,7 +21,7 @@ public interface Money extends IForgeRegistryEntry<Money> {
 
         public Money getType();
 
-        /** 不要乘以复数! **/
+        /** 不要乘以小数! **/
         public long getWorth(ItemStack stack);
 
     }

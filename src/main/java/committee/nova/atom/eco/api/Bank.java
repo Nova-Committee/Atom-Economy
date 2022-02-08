@@ -23,7 +23,7 @@ public abstract class Bank  implements Manageable {
     protected String name;//
     protected long balance;//余额
     protected TreeMap<String, String> fees; //利率
-    protected ArrayList<String> status = new ArrayList<>();
+    protected ArrayList<String> status = new ArrayList<>();//状态
     private JsonObject additionaldata;//附加数据
 
     /** 解析json文件 */

@@ -25,11 +25,11 @@ public class ItemManager {
     }
 
     public static long countInInventory(PlayerEntity player){
-        long value = 0l;
+        long value = 0L;
         for(ItemStack stack : player.inventory.items){
             if(stack.isEmpty()) continue;
             long worth = ConfigUtil.getItemStackWorth(stack);
-            PrintUtil.debug(stack.toString(), stack.getItem() instanceof Money.Item ? ((Money.Item)stack.getItem()).getType().toString() : "not internal money item");
+            PrintUtil.debug(stack.toString(), stack.getItem() instanceof Money.Item ? ((Money.Item)stack.getItem()).getType().toString() : "不是合法的货币");
             value += worth * stack.getCount();
         }
         return value;
@@ -93,7 +93,7 @@ public class ItemManager {
             continue;
         }
         if(amount > 0){
-            player.sendMessage(new StringTextComponent(ConfigUtil.getWorthAsString(amount, true, true) + " couldn't be added to inventory because no matching items were found."), UUID.randomUUID());
+            player.sendMessage(new StringTextComponent(ConfigUtil.getWorthAsString(amount, true, true) + " 不能被添加到物品栏，因为没有相应的物品"), UUID.randomUUID());
         }
         return amount;
     }
