@@ -1,8 +1,6 @@
-package committee.nova.atom.eco.core;
+package committee.nova.atom.eco.api.account;
 
 import com.google.gson.JsonObject;
-import committee.nova.atom.eco.api.Account;
-import committee.nova.atom.eco.api.Bank;
 import net.minecraft.command.ICommandSource;
 import net.minecraft.util.text.StringTextComponent;
 

@@ -1,9 +1,9 @@
 package committee.nova.atom.eco.init.events;
 
-import committee.nova.atom.eco.api.Account;
-import committee.nova.atom.eco.api.AccountPermission;
-import committee.nova.atom.eco.api.Bank;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.api.account.Account;
+import committee.nova.atom.eco.api.account.AccountPermission;
+import committee.nova.atom.eco.api.account.Bank;
+import committee.nova.atom.eco.core.AccountDataManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -23,7 +23,7 @@ public class ATMEvent extends Event {
 
     private ATMEvent(PlayerEntity player){
         this.player = player;
-        this.account = DataManager.getAccount("player", player.getStringUUID(), false);
+        this.account = AccountDataManager.getAccount("player", player.getStringUUID(), false);
     }
 
     public PlayerEntity getPlayer(){
@@ -35,7 +35,7 @@ public class ATMEvent extends Event {
     }
 
     public Bank getBank(){
-        if(bank == null) bank = DataManager.getBank(account.getBankId(), true);
+        if (bank == null) bank = AccountDataManager.getBank(account.getBankId(), true);
         return bank;
     }
 

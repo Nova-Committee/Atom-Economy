@@ -1,7 +1,7 @@
-package committee.nova.atom.eco.api;
+package committee.nova.atom.eco.api.account;
 
 
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
 import committee.nova.atom.eco.utils.JsonUtil;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -51,7 +51,7 @@ public class AccountPermission {
 
     public Account getAccount(){
         if(account == null){
-            account = DataManager.getAccount(account_id.split(":")[0], account_id.split(":")[1], true);
+            account = AccountDataManager.getAccount(account_id.split(":")[0], account_id.split(":")[1], true);
         }
         return account;
     }

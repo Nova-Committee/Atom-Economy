@@ -1,7 +1,6 @@
 package committee.nova.atom.eco.utils;
 
 import com.google.common.collect.ImmutableMap;
-import com.sun.javafx.geom.Vec3d;
 import committee.nova.atom.eco.Eco;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -9,6 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.registry.Registry;
 
 import java.util.Map;
@@ -22,9 +22,8 @@ import java.util.Optional;
  */
 public class BufferUtil {
 
-    public static Vec3d readVec3d(PacketBuffer buffer)
-    {
-        return new Vec3d
+    public static Vector3d readVec3d(PacketBuffer buffer) {
+        return new Vector3d
                 (
                         buffer.readDouble(),
                         buffer.readDouble(),
@@ -32,8 +31,7 @@ public class BufferUtil {
                 );
     }
 
-    public static PacketBuffer writeVec3d(PacketBuffer buffer, Vec3d vec3d)
-    {
+    public static PacketBuffer writeVec3d(PacketBuffer buffer, Vector3d vec3d) {
         buffer.writeDouble(vec3d.x);
         buffer.writeDouble(vec3d.y);
         buffer.writeDouble(vec3d.z);

@@ -1,13 +1,13 @@
-package committee.nova.atom.eco.data;
+package committee.nova.atom.eco.core;
 
 import com.google.gson.JsonObject;
 import committee.nova.atom.eco.Eco;
-import committee.nova.atom.eco.api.Account;
-import committee.nova.atom.eco.api.Bank;
+import committee.nova.atom.eco.api.account.Account;
+import committee.nova.atom.eco.api.account.Bank;
+import committee.nova.atom.eco.api.account.GenericBank;
+import committee.nova.atom.eco.api.account.NullBank;
 import committee.nova.atom.eco.common.config.ConfigUtil;
 import committee.nova.atom.eco.common.config.ModConfig;
-import committee.nova.atom.eco.core.GenericBank;
-import committee.nova.atom.eco.core.NullBank;
 import committee.nova.atom.eco.utils.JsonUtil;
 import net.minecraft.util.ResourceLocation;
 
@@ -20,29 +20,33 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Description:
+ * Description: 账号数据管理类
  * Author: cnlimiter
  * Date: 2022/1/20 10:06
  * Version: 1.0
  */
-public class DataManager  {
+public class AccountDataManager {
     private static final Map<String, Map<String, Account>> ACCOUNTS = new ConcurrentHashMap<>(); // 类型 - uuid - 账户
     private static final Map<String, Bank> BANKS = new ConcurrentHashMap<>();
     private static final Map<String, String> BANK_NAME_CACHE = new ConcurrentHashMap<>();
     public static File ACCOUNT_DIR, BANK_DIR;
     protected static Timer timer;
 
-    public DataManager(File file){
+    public AccountDataManager(File file) {
         timer = new Timer();
         BANK_NAME_CACHE.clear();
-        ACCOUNT_DIR = new File(file, "/economy/accounts/");
-        if(!ACCOUNT_DIR.exists()){ ACCOUNT_DIR.mkdirs(); }
-        BANK_DIR = new File(file, "/economy/banks/");
-        if(!BANK_DIR.exists()){ BANK_DIR.mkdirs(); }
+        ACCOUNT_DIR = new File(file, "/accounts/");
+        if (!ACCOUNT_DIR.exists()) {
+            ACCOUNT_DIR.mkdirs();
+        }
+        BANK_DIR = new File(file, "/banks/");
+        if (!BANK_DIR.exists()) {
+            BANK_DIR.mkdirs();
+        }
         ConfigUtil.loadDefaultBanks();
-        for(File bfl : BANK_DIR.listFiles()){
-            if(bfl.isDirectory()) continue;
-            try{
+        for (File bfl : BANK_DIR.listFiles()) {
+            if (bfl.isDirectory()) continue;
+            try {
                 new GenericBank(JsonUtil.get(bfl));
             }
             catch(Throwable ignored){}
@@ -83,28 +87,27 @@ public class DataManager  {
         }
     }
 
-    public static void unloadBank(String id){
-        try{
+    public static void unloadBank(String id) {
+        try {
             save(BANKS.remove(id));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
     }
 
-    public static DataManager getInstance(){
-        return Eco.CACHE;
+    public static AccountDataManager getInstance() {
+        return Eco.ACCOUNT_CACHE;
     }
 
     @Nullable
-    public static Account getAccount(String type, String uuid,  boolean create){
-        return getAccount(type, uuid,  create, null);
+    public static Account getAccount(String type, String uuid, boolean create) {
+        return getAccount(type, uuid, create, null);
     }
 
     @Nullable
-    public static Account getAccount(String type, String uuid, boolean create, Class<? extends Account> impl){
-        if(ACCOUNTS.containsKey(type) && ACCOUNTS.get(type).containsKey(uuid)){
+    public static Account getAccount(String type, String uuid, boolean create, Class<? extends Account> impl) {
+        if (ACCOUNTS.containsKey(type) && ACCOUNTS.get(type).containsKey(uuid)) {
             Account account = ACCOUNTS.get(type).get(uuid);
             return account;
         }
@@ -171,18 +174,18 @@ public class DataManager  {
         if(BANKS.containsKey(id)){
             return BANKS.get(id);
         }
-        if (create){
-            impl = impl == null ? GenericBank.class : impl; File file = new File(BANK_DIR, id + ".json");
-            if(file.exists()){
-                try{
+        if (create) {
+            impl = impl == null ? GenericBank.class : impl;
+            File file = new File(BANK_DIR, id + ".json");
+            if (file.exists()) {
+                try {
                     Bank bank = impl.getConstructor(JsonObject.class).newInstance(JsonUtil.get(file));
-                    if(!bank.getId().equals(id)){
+                    if (!bank.getId().equals(id)) {
                         throw new RuntimeException("文件中的银行数据与请求的不匹配！应该得到解决.\n" + file.getPath());
                     }
                     addBank(bank);
                     return bank;
-                }
-                catch(ReflectiveOperationException | RuntimeException e){
+                } catch (ReflectiveOperationException | RuntimeException e) {
                     e.printStackTrace();
                     return NullBank.INSTANCE;
                 }
@@ -226,7 +229,7 @@ public class DataManager  {
 
     public static boolean exists(String type, String id){
         if(ACCOUNTS.containsKey(type) && ACCOUNTS.get(type).containsKey(id)) return true;
-        File folder = new File(DataManager.ACCOUNT_DIR, type + "/");
+        File folder = new File(AccountDataManager.ACCOUNT_DIR, type + "/");
         if(!folder.exists()) return false;
         for(File file : Objects.requireNonNull(folder.listFiles())){
             if(file.isDirectory() || file.isHidden()) continue;
@@ -246,8 +249,10 @@ public class DataManager  {
         }
     }
 
-    public void clearAll(){
-        ACCOUNTS.clear(); BANKS.clear(); timer.cancel();
+    public void clearAll() {
+        ACCOUNTS.clear();
+        BANKS.clear();
+        timer.cancel();
     }
 
 }

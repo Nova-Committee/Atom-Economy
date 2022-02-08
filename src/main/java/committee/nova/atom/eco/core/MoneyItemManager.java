@@ -1,7 +1,7 @@
-package committee.nova.atom.eco.common.items;
+package committee.nova.atom.eco.core;
 
 import committee.nova.atom.eco.Eco;
-import committee.nova.atom.eco.api.Money;
+import committee.nova.atom.eco.api.money.Money;
 import committee.nova.atom.eco.common.config.ConfigUtil;
 import committee.nova.atom.eco.utils.PrintUtil;
 import net.minecraft.command.ICommandSource;
@@ -14,22 +14,22 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Description:
+ * Description: 实体货币管理类
  * Author: cnlimiter
  * Date: 2022/1/20 11:42
  * Version: 1.0
  */
-public class ItemManager {
-    public static long countInInventory(ICommandSource sender){
-        return sender instanceof PlayerEntity ? countInInventory((PlayerEntity)sender) : -1;
+public class MoneyItemManager {
+    public static long countInInventory(ICommandSource sender) {
+        return sender instanceof PlayerEntity ? countInInventory((PlayerEntity) sender) : -1;
     }
 
-    public static long countInInventory(PlayerEntity player){
+    public static long countInInventory(PlayerEntity player) {
         long value = 0L;
-        for(ItemStack stack : player.inventory.items){
-            if(stack.isEmpty()) continue;
+        for (ItemStack stack : player.inventory.items) {
+            if (stack.isEmpty()) continue;
             long worth = ConfigUtil.getItemStackWorth(stack);
-            PrintUtil.debug(stack.toString(), stack.getItem() instanceof Money.Item ? ((Money.Item)stack.getItem()).getType().toString() : "不是合法的货币");
+            PrintUtil.debug(stack.toString(), stack.getItem() instanceof Money.Item ? ((Money.Item) stack.getItem()).getType().toString() : "不是合法的货币");
             value += worth * stack.getCount();
         }
         return value;

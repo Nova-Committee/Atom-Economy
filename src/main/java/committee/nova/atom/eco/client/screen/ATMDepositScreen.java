@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import committee.nova.atom.eco.Eco;
 import committee.nova.atom.eco.common.config.ConfigUtil;
 import committee.nova.atom.eco.common.containers.ATMContainer;
-import committee.nova.atom.eco.common.items.ItemManager;
+import committee.nova.atom.eco.core.MoneyItemManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
@@ -57,7 +57,7 @@ public class ATMDepositScreen extends AbstractScreenPage<ATMContainer>{
         values.render(matrix, mouseX, mouseY, partialTicks);
         deposit.render(matrix, mouseX, mouseY, partialTicks);
 
-        StringTextComponent inPlayer = new StringTextComponent(ConfigUtil.getWorthAsString(ItemManager.countInInventory(container.player)));
+        StringTextComponent inPlayer = new StringTextComponent(ConfigUtil.getWorthAsString(MoneyItemManager.countInInventory(container.player)));
 
         matrix.pushPose();
         matrix.scale(1.3f,1.3f,1.3f);

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import committee.nova.atom.eco.Eco;
 import committee.nova.atom.eco.common.config.ConfigUtil;
 import committee.nova.atom.eco.common.containers.ATMContainer;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
@@ -56,7 +56,7 @@ public class ATMWithdrawScreen extends AbstractScreenPage<ATMContainer>{
         values.render(matrix, mouseX, mouseY, partialTicks);
         withdraw.render(matrix, mouseX, mouseY, partialTicks);
 
-        StringTextComponent inBank = new StringTextComponent(ConfigUtil.getWorthAsString(DataManager.getAccount("player", container.player.getStringUUID(), false).getBalance()));
+        StringTextComponent inBank = new StringTextComponent(ConfigUtil.getWorthAsString(AccountDataManager.getAccount("player", container.player.getStringUUID(), false).getBalance()));
 
         matrix.pushPose();
         matrix.scale(1.3f,1.3f,1.3f);

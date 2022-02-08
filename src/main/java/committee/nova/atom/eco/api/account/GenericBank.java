@@ -1,11 +1,8 @@
-package committee.nova.atom.eco.core;
+package committee.nova.atom.eco.api.account;
 
 import com.google.gson.JsonObject;
 import committee.nova.atom.eco.Eco;
-import committee.nova.atom.eco.api.Account;
-import committee.nova.atom.eco.api.Bank;
-import committee.nova.atom.eco.api.Manageable;
-import committee.nova.atom.eco.common.items.ItemManager;
+import committee.nova.atom.eco.core.MoneyItemManager;
 import committee.nova.atom.eco.utils.PrintUtil;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSource;
@@ -73,7 +70,7 @@ public class GenericBank extends Bank {
                 total = amount + (included ? 0 : fee);
                 if(sender.getBalance() - total >= 0){
                     sender.modifyBalance(Manageable.Action.SUB, total, player);
-                    ItemManager.addToInventory(player, amount - (included ? fee : 0));
+                    MoneyItemManager.addToInventory(player, amount - (included ? fee : 0));
                     log(player, action, amount, fee, total, included, sender, receiver);
                     return true;
                 }
@@ -90,21 +87,20 @@ public class GenericBank extends Bank {
                     return false;
                 }
                 if(amount <= 0){
-                    log.sendMessage(new StringTextComponent("存款失败! 金额是空的或是负的. (T:" + amount + " || I:" + ItemManager.countInInventory(log) + ");"), UUID.randomUUID());
-                    PrintUtil.debug(((CommandSource)log).getDisplayName() + " 正在存入空的或是负的数额!");
+                    log.sendMessage(new StringTextComponent("存款失败! 金额是空的或是负的. (T:" + amount + " || I:" + MoneyItemManager.countInInventory(log) + ");"), UUID.randomUUID());
+                    PrintUtil.debug(((CommandSource) log).getDisplayName() + " 正在存入空的或是负的数额!");
                     return false;
                 }
                 player = (PlayerEntity) log;
-                if(receiver.getBalance() + amount <= Long.MAX_VALUE){
+                if(receiver.getBalance() + amount <= Long.MAX_VALUE) {
                     fee = fees == null ? 0 : parseFee(fees.get("self:" + receiver.getType()), amount);
                     total = amount + (included ? 0 : fee);
-                    if(ItemManager.countInInventory(player) - total >= 0){
-                        ItemManager.removeFromInventory(player, total);
+                    if (MoneyItemManager.countInInventory(player) - total >= 0) {
+                        MoneyItemManager.removeFromInventory(player, total);
                         receiver.modifyBalance(Manageable.Action.ADD, amount - (included ? fee : 0), player);
                         log(player, action, amount, fee, total, included, sender, receiver);
                         return true;
-                    }
-                    else{
+                    } else {
                         log.sendMessage(new StringTextComponent("存款失败! 背包里没有足够的钱. (D:" + amount + " || B:" + receiver.getBalance() + ");"), UUID.randomUUID());
                         PrintUtil.log(receiver.getAsResourceLocation().toString() + ": 存款失败! 背包里没有足够的钱. (D:" + amount + " || B:" + receiver.getBalance() + ");");
                         return false;

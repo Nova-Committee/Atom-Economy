@@ -1,8 +1,8 @@
-package committee.nova.atom.eco.api;
+package committee.nova.atom.eco.api.account;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
 import net.minecraft.command.ICommandSource;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -46,7 +46,7 @@ public abstract class Bank  implements Manageable {
         if(obj.has("status")){
             obj.get("status").getAsJsonArray().forEach(elm -> status.add(elm.getAsString()));
         }
-        DataManager.getBankNameCache().put(id, name);
+        AccountDataManager.getBankNameCache().put(id, name);
     }
 
     /** 正常构造 */

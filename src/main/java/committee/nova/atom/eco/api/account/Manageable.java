@@ -1,4 +1,4 @@
-package committee.nova.atom.eco.api;
+package committee.nova.atom.eco.api.account;
 
 import net.minecraft.command.ICommandSource;
 

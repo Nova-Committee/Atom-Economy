@@ -38,12 +38,19 @@ public class FormatUtil {
         return string.replaceAll("&d", string).replaceAll(PARAGRAPH_SIGN + "d", string);
     }
 
-    public static net.minecraft.util.text.ITextComponent newTextComponentString(String string){
+    public static net.minecraft.util.text.ITextComponent newTextComponentString(String string) {
         return new StringTextComponent(format(string));
     }
 
-    public static String format(String string, Object... objs){
+    public static String format(String string, Object... objs) {
         return format(String.format(string, objs));
+    }
+
+
+    public static String printCurrency(int amount) {
+        return StringUtil.printCommas(amount)
+                //+ ModConfig.getCommon.currencyName.get()
+                ;
     }
 
 }

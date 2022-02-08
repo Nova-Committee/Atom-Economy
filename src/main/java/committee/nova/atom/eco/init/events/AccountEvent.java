@@ -1,6 +1,6 @@
 package committee.nova.atom.eco.init.events;
 
-import committee.nova.atom.eco.api.Account;
+import committee.nova.atom.eco.api.account.Account;
 import net.minecraftforge.eventbus.api.Event;
 
 /**

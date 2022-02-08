@@ -1,10 +1,9 @@
-package committee.nova.atom.eco.core;
+package committee.nova.atom.eco.api.money;
 
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import committee.nova.atom.eco.Eco;
 import committee.nova.atom.eco.Static;
-import committee.nova.atom.eco.api.Money;
 import committee.nova.atom.eco.utils.ItemUtil;
 import committee.nova.atom.eco.utils.JsonUtil;
 import committee.nova.atom.eco.utils.PrintUtil;

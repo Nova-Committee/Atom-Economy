@@ -3,11 +3,11 @@ package committee.nova.atom.eco.common.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import committee.nova.atom.eco.Eco;
-import committee.nova.atom.eco.api.Money;
+import committee.nova.atom.eco.api.account.GenericBank;
+import committee.nova.atom.eco.api.money.GenericMoney;
+import committee.nova.atom.eco.api.money.Money;
 import committee.nova.atom.eco.common.items.GenericMoneyItem;
-import committee.nova.atom.eco.core.GenericBank;
-import committee.nova.atom.eco.core.GenericMoney;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
 import committee.nova.atom.eco.utils.ItemUtil;
 import committee.nova.atom.eco.utils.JsonUtil;
 import net.minecraft.item.Item;
@@ -32,7 +32,7 @@ public class ConfigUtil {
     private static JsonArray DEF_BANKS;
     private static Item MONEY;
     private static TreeMap<ResourceLocation, Long> EXTERNAL_ITEMS = new TreeMap<>();
-    private static TreeMap<String, Long> EXTERNAL_ITEMS_METAWORTH = new TreeMap<>();
+    private static TreeMap<String, Long> EXTERNAL_ITEMS_WORTH = new TreeMap<>();
 
     static {
         DEFAULT.put("1yuan", 1000L);
@@ -77,9 +77,9 @@ public class ConfigUtil {
         if(DEF_BANKS == null) return;
         DEF_BANKS.forEach((elm) -> {
             String uuid = elm.getAsJsonObject().get("uuid").getAsString();
-            File file = new File(DataManager.BANK_DIR, uuid + ".json");
-            if(!file.exists() && !DataManager.getBanks().containsKey(uuid)){
-                DataManager.addBank(new GenericBank(elm.getAsJsonObject()));
+            File file = new File(AccountDataManager.BANK_DIR, uuid + ".json");
+            if (!file.exists() && !AccountDataManager.getBanks().containsKey(uuid)) {
+                AccountDataManager.addBank(new GenericBank(elm.getAsJsonObject()));
             }
         });
     }
@@ -147,14 +147,14 @@ public class ConfigUtil {
         }
     }
 
-    public static final long getItemStackWorth(ItemStack stack){
-        if(stack.getItem() instanceof Money.Item){
-            return ((Money.Item)stack.getItem()).getWorth(stack);
+    public static final long getItemStackWorth(ItemStack stack) {
+        if (stack.getItem() instanceof Money.Item) {
+            return ((Money.Item) stack.getItem()).getWorth(stack);
         }
-        if(EXTERNAL_ITEMS_METAWORTH.containsKey(stack.getItem().getRegistryName())){
-            return EXTERNAL_ITEMS_METAWORTH.get(stack.getItem().getRegistryName());
+        if (EXTERNAL_ITEMS_WORTH.containsKey(stack.getItem().getRegistryName())) {
+            return EXTERNAL_ITEMS_WORTH.get(stack.getItem().getRegistryName());
         }
-        if(EXTERNAL_ITEMS.containsKey(stack.getItem().getRegistryName())){
+        if (EXTERNAL_ITEMS.containsKey(stack.getItem().getRegistryName())) {
             return EXTERNAL_ITEMS.get(stack.getItem().getRegistryName());
         }
         return 0;
@@ -163,7 +163,7 @@ public class ConfigUtil {
     public static boolean containsAsExternalItemStack(ItemStack stack){
         try{
             return EXTERNAL_ITEMS.containsKey(stack.getItem().getRegistryName())
-                    || EXTERNAL_ITEMS_METAWORTH.containsKey(stack.getItem().getRegistryName());
+                    || EXTERNAL_ITEMS_WORTH.containsKey(stack.getItem().getRegistryName());
         }
         catch(Exception e){
             e.printStackTrace();
@@ -186,7 +186,7 @@ public class ConfigUtil {
                     JsonObject jsn = elm.getAsJsonObject();
                     ResourceLocation rs = new ResourceLocation(jsn.get("id").getAsString());
                     long worth = jsn.get("worth").getAsLong();
-                    EXTERNAL_ITEMS_METAWORTH.put(rs.toString(), worth);
+                    EXTERNAL_ITEMS_WORTH.put(rs.toString(), worth);
                     if(!EXTERNAL_ITEMS.containsKey(rs)){
                         EXTERNAL_ITEMS.put(rs, 0L);
                     }

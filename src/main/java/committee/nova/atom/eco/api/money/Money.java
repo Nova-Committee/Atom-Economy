@@ -1,4 +1,4 @@
-package committee.nova.atom.eco.api;
+package committee.nova.atom.eco.api.money;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.registries.IForgeRegistryEntry;

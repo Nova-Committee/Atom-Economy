@@ -1,4 +1,4 @@
-package committee.nova.atom.eco.api;
+package committee.nova.atom.eco.api.account;
 
 import com.google.gson.JsonObject;
 import committee.nova.atom.eco.init.events.AccountEvent;
@@ -16,7 +16,7 @@ import java.util.UUID;
  * Date: 2022/1/20 9:40
  * Version: 1.0
  */
-public class Account  implements Manageable{
+public class Account implements Manageable {
     private final String id; //玩家 uuid
     private final String type; // 种类
     private String bank; //对应银行
@@ -24,8 +24,10 @@ public class Account  implements Manageable{
     private long balance; // 余额
     private JsonObject additionaldata; // 附加数据
 
-    /** 解析json文件 */
-    public Account(JsonObject obj){
+    /**
+     * 解析json文件
+     */
+    public Account(JsonObject obj) {
         id = obj.get("id").getAsString();
         type = obj.get("type").getAsString();
         bank = obj.get("bank").getAsString();
