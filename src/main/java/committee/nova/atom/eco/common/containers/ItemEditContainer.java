@@ -3,11 +3,14 @@ package committee.nova.atom.eco.common.containers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import committee.nova.atom.eco.api.common.containers.slots.DisplaySlot;
 import committee.nova.atom.eco.api.market.MarketEntity;
-import committee.nova.atom.eco.common.containers.slots.DisplaySlot;
 import committee.nova.atom.eco.common.net.PacketHandler;
+import committee.nova.atom.eco.common.net.packets.ItemEditSetPacket;
+import committee.nova.atom.eco.core.MarketDataManager;
 import committee.nova.atom.eco.utils.InventoryUtil;
 import committee.nova.atom.eco.utils.math.MathUtil;
+import committee.nova.atom.eco.utils.math.Time;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -72,7 +75,6 @@ public class ItemEditContainer extends Container {
         //加载所有物品
         initItemList();
         this.filteredResultItems = this.getFilteredItems();
-
         //将搜索值设为默认
         this.modifySearch("");
     }
@@ -155,7 +157,7 @@ public class ItemEditContainer extends Container {
             ItemStack stack = slot.getItem();
             //Define the item
             if (!stack.isEmpty()) {
-                this.setItem(this.editSlot, stack);
+                this.setItem(stack);
                 return ItemStack.EMPTY;
             }
         }
@@ -260,24 +262,20 @@ public class ItemEditContainer extends Container {
 
     }
 
-    public void setItem(ItemStack stack, int slot) {
-        if (!this.traderSource.get().hasPermission(this.player, Permissions.EDIT_TRADES))
-            return;
+    public void setItem(ItemStack stack) {
+//        if (!this.traderSource.get().hasPermission(this.player, Permissions.EDIT_TRADES))
+//            return;
         if (isClient()) {
             //向服务器发送
-            if (this.editSlot == 1)
-                this.tradeData.setBarterItem(stack);
-            else
-                this.tradeData.setSellItem(stack);
-            PacketHandler.INSTANCE.sendToServer(new MessageItemEditSet(stack, this.editSlot));
+            PacketHandler.INSTANCE.sendToServer(new ItemEditSetPacket(stack));
         } else {
-            //Set the trade
-            if (slot == 1)
-                this.traderSource.get().getTrade(this.tradeIndex).setBarterItem(stack);
-            else
-                this.traderSource.get().getTrade(this.tradeIndex).setSellItem(stack);
-            this.traderSource.get().markTradesDirty();
+            marketItem.setRegistryName(stack.getItem().getRegistryName().toString());
+            marketItem.setStackNBT(stack.getItem().getTags().toString());
         }
+    }
+
+    public void confirmAction(String type, String displayName, ItemStack stack) {
+        MarketDataManager.createMarket(type, player.getStringUUID(), (int) Time.getDate(), displayName, stack, marketItem.getAmount(), marketItem.getValue());
     }
 
 }

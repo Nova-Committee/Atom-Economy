@@ -10,14 +10,16 @@ import net.minecraft.nbt.CompoundNBT;
  * Version: 1.0
  */
 public class MarketEntity {
-    public final int index;
-    public final int amount;
-    public final int value;
-    final String displayName;
-    final String registryName;
-    final String stackNBT;
-    final String ownerUUID;
-    final boolean sell;
+
+
+    public int index;
+    public int amount;
+    public int value;
+    String displayName;
+    String registryName;
+    String stackNBT;
+    String ownerUUID;
+    boolean sell;
 
 
     public MarketEntity(JsonObject json) {
@@ -47,6 +49,37 @@ public class MarketEntity {
         return new MarketEntity(nbt.getInt("index"), nbt.getString("displayName"), nbt.getString("registryName"), stackNBT, nbt.getString("ownerUUID"), nbt.getBoolean("sell"), nbt.getInt("amount"), nbt.getInt("value"));
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setRegistryName(String registryName) {
+        this.registryName = registryName;
+    }
+
+    public void setStackNBT(String stackNBT) {
+        this.stackNBT = stackNBT;
+    }
+
+    public void setOwnerUUID(String ownerUUID) {
+        this.ownerUUID = ownerUUID;
+    }
+
+    public void setSell(boolean sell) {
+        this.sell = sell;
+    }
 
     public int getIndex() {
         return index;

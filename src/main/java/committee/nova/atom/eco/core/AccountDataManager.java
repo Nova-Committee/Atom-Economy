@@ -133,7 +133,7 @@ public class AccountDataManager {
         }
         else if(create){
             try{
-                Account account = impl.getConstructor(String.class, String.class, long.class, String.class, JsonObject.class).newInstance(uuid, type, type.equals("player") ? ModConfig.COMMON.STARTING_BALANCE.get() : 0, ModConfig.Common.DEFAULT_BANK.get(), null);
+                Account account = impl.getConstructor(String.class, String.class, long.class, String.class, JsonObject.class).newInstance(uuid, type, type.equals("player") ? ModConfig.COMMON.startingBalance.get() : 0, ModConfig.Common.defaultBank.get(), null);
                 addAccount(type, account);
                 Eco.LOGGER.info("创建新的账户 " +type + ":" + uuid + "!");
                 return account;
@@ -192,7 +192,7 @@ public class AccountDataManager {
             }
             else {
                 try{
-                    Bank bank = impl.getConstructor(String.class, String.class, long.class, JsonObject.class, TreeMap.class).newInstance(id, id.equals(ModConfig.Common.DEFAULT_BANK.get()) ? "Default Server Bank" : "Generated Bank", ModConfig.COMMON.STARTING_BALANCE.get(), null, null);
+                    Bank bank = impl.getConstructor(String.class, String.class, long.class, JsonObject.class, TreeMap.class).newInstance(id, id.equals(ModConfig.Common.defaultBank.get()) ? "Default Server Bank" : "Generated Bank", ModConfig.COMMON.startingBalance.get(), null, null);
                     addBank(bank);
                     Eco.LOGGER.info("创建ID为 " + id + "的新银行.");
                     return bank;

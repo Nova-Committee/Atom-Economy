@@ -30,7 +30,7 @@ import java.util.TreeMap;
 public class ConfigUtil {
     private static final TreeMap<String, Long> DEFAULT = new TreeMap<String, Long>();
     private static JsonArray DEF_BANKS;
-    private static Item MONEY;
+    public static Item MONEY;
     private static TreeMap<ResourceLocation, Long> EXTERNAL_ITEMS = new TreeMap<>();
     private static TreeMap<String, Long> EXTERNAL_ITEMS_WORTH = new TreeMap<>();
 
@@ -96,18 +96,23 @@ public class ConfigUtil {
         //
         JsonArray banks = new JsonArray();
         JsonObject def = new JsonObject();
-        def.addProperty("uuid", ModConfig.Common.DEFAULT_BANK.get());
+        def.addProperty("uuid", ModConfig.COMMON.defaultBank.get());
         def.addProperty("name", "Default Server Bank");
         def.add("data", new JsonObject());
         banks.add(def);
         obj.add("Banks", banks);
         //
         JsonObject extexp = new JsonObject();
+        JsonObject baoshi = new JsonObject();
         JsonArray ext = new JsonArray();
         extexp.addProperty("id", "minecraft:nether_star");
         extexp.addProperty("worth", 100000);
         extexp.addProperty("register", false);
+        baoshi.addProperty("id", "minecraft:emerald");
+        baoshi.addProperty("worth", 1000);
+        baoshi.addProperty("register", false);//是否注册成货币
         ext.add(extexp);
+        ext.add(baoshi);
         obj.add("ExternalItems", ext);
         //
         return obj;
@@ -124,10 +129,11 @@ public class ConfigUtil {
     public static String getWorthAsString(long value, boolean append, boolean ignore){
         String str = value + "";
         if(value < 1000){
-            if(!ModConfig.COMMON.SHOW_DECIMALS.get() && (value == 0 || (!ModConfig.COMMON.SHOW_DECIMALS.get() && !ignore && value < 100))) return "0" + (append ? ModConfig.Common.CURRENCY_SIGN.get() : "");
+            if (!ModConfig.COMMON.showDecimals.get() && (value == 0 || (!ModConfig.COMMON.showDecimals.get() && !ignore && value < 100)))
+                return "0" + (append ? ModConfig.COMMON.currencySign.get() : "");
             str = value + "";
             str = str.length() == 1 ? "00" + str : str.length() == 2 ? "0" + str : str;
-            return ((str = "0" + ModConfig.DOT + str).length() == 5 && (!ignore && !ModConfig.COMMON.SHOW_DECIMALS.get()) ? str.substring(0, 4) : str) + (append ? ModConfig.Common.CURRENCY_SIGN.get() : "");
+            return ((str = "0" + ModConfig.DOT + str).length() == 5 && (!ignore && !ModConfig.COMMON.showDecimals.get()) ? str.substring(0, 4) : str) + (append ? ModConfig.COMMON.currencySign.get() : "");
         }
         else{
             try{
@@ -138,7 +144,7 @@ public class ConfigUtil {
                     str += arr[i] + ((i >= arr.length - 1) ? "" :  ModConfig.COMMA);
                 }
                 str = new StringBuilder(str).reverse().toString();
-                return (str = ModConfig.COMMON.SHOW_DECIMALS.get() ? ModConfig.COMMON.SHOW_CENTESIMALS.get() || ignore ? str : str.substring(0, str.length() - 1) : str.substring(0, str.lastIndexOf(ModConfig.DOT))) + (append ? ModConfig.Common.CURRENCY_SIGN.get() : "");
+                return (str = ModConfig.COMMON.showDecimals.get() ? ModConfig.COMMON.showCentesimals.get() || ignore ? str : str.substring(0, str.length() - 1) : str.substring(0, str.lastIndexOf(ModConfig.DOT))) + (append ? ModConfig.COMMON.currencySign.get() : "");
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -149,7 +155,7 @@ public class ConfigUtil {
 
     public static final long getItemStackWorth(ItemStack stack) {
         if (stack.getItem() instanceof Money.Item) {
-            return ((Money.Item) stack.getItem()).getWorth(stack);
+            return ((Money.Item) stack.getItem()).getWorth();
         }
         if (EXTERNAL_ITEMS_WORTH.containsKey(stack.getItem().getRegistryName())) {
             return EXTERNAL_ITEMS_WORTH.get(stack.getItem().getRegistryName());

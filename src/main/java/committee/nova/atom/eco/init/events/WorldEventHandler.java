@@ -53,16 +53,16 @@ public class WorldEventHandler {
                 event.getAccountsMap().put(account.getTypeAndId(), new AccountPermission(account));
             }
         }
-        if(ModConfig.COMMON.PARTIAL_ACCOUNT_NAME_SEARCH.get()){
-            for(String str : Static.getSERVER().getPlayerNames()){
-                if(str.contains(event.getSearchedId()) && !event.getAccountsMap().containsKey("player:" + str)){
+        if (ModConfig.COMMON.partialAccountNameSearch.get()) {
+            for (String str : Static.getSERVER().getPlayerNames()) {
+                if (str.contains(event.getSearchedId()) && !event.getAccountsMap().containsKey("player:" + str)) {
                     GameProfile gp = Static.getSERVER().getProfileCache().get(str);
-                    if(gp == null) continue;
+                    if (gp == null) continue;
                     putIn(event.getAccountsMap(), "player:" + gp.getId().toString());
                 }
             }
             File folder = new File(AccountDataManager.ACCOUNT_DIR, "player/");
-            if(!folder.exists()) return;
+            if (!folder.exists()) return;
             String str = null;
             for(File file : folder.listFiles()){
                 if(file.isDirectory() || file.isHidden()) continue;

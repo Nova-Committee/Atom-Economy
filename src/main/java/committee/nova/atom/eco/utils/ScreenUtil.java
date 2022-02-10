@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import committee.nova.atom.eco.Static;
 import committee.nova.atom.eco.client.widegts.ScreenRect;
+import committee.nova.atom.eco.utils.text.StringUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.ItemRenderer;

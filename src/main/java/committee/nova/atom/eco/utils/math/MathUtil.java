@@ -1,5 +1,7 @@
 package committee.nova.atom.eco.utils.math;
 
+import net.minecraft.client.gui.screen.Screen;
+
 /**
  * Description:
  * Author: cnlimiter
@@ -26,5 +28,24 @@ public class MathUtil {
         else if (value > max)
             value = max;
         return value;
+    }
+
+    public static int scaleInt(int value, int maxValue, int maxScale) {
+        float f = value * (float) maxScale / maxValue;
+        return (int) f;
+    }
+
+    public static int getShiftCtrlInt(int defaultInt, int shiftInt, int ctrlInt, int bothInt) {
+
+        int i = defaultInt;
+
+        boolean s = Screen.hasShiftDown();
+        boolean c = Screen.hasControlDown();
+
+        if (s) i = shiftInt;
+        if (c) i = ctrlInt;
+        if (s && c) i = bothInt;
+
+        return i;
     }
 }

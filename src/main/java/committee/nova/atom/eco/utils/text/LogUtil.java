@@ -1,4 +1,4 @@
-package committee.nova.atom.eco.utils;
+package committee.nova.atom.eco.utils.text;
 
 import committee.nova.atom.eco.Static;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -11,14 +11,14 @@ import org.apache.logging.log4j.Logger;
  * Date: 2022/1/20 9:53
  * Version: 1.0
  */
-public class PrintUtil {
+public class LogUtil {
     private static final Logger logger = LogManager.getLogger("AtomL");
 
-    public static void log(Object obj){
-        if(obj instanceof Iterable){
-            Iterable<?> inte = (Iterable<?>)obj;
+    public static void log(Object obj) {
+        if (obj instanceof Iterable) {
+            Iterable<?> inte = (Iterable<?>) obj;
             logger.info("ITERABLE: {");
-            for(Object object : inte){
+            for (Object object : inte) {
                 logger.info("    " + (object == null ? ">> IS null;" : String.valueOf(object)));
             }
             logger.info("}");

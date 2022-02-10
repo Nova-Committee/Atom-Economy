@@ -3,7 +3,6 @@ package committee.nova.atom.eco.common.items;
 import committee.nova.atom.eco.api.money.Money;
 import committee.nova.atom.eco.init.ModTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 /**
  * Description:
@@ -30,7 +29,7 @@ public class GenericMoneyItem extends Item implements Money.Item {
     }
 
     @Override
-    public long getWorth(ItemStack stack){
+    public long getWorth() {
         return type.getWorth()/* * stack.getCount()*/;
     }
 }

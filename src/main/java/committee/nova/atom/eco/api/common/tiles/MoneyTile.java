@@ -1,4 +1,4 @@
-package committee.nova.atom.eco.common.tiles.base;
+package committee.nova.atom.eco.api.common.tiles;
 
 import committee.nova.atom.eco.api.security.ISecurity;
 import net.minecraft.block.BlockState;

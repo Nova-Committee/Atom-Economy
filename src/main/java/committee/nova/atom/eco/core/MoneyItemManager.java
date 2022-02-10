@@ -3,7 +3,7 @@ package committee.nova.atom.eco.core;
 import committee.nova.atom.eco.Eco;
 import committee.nova.atom.eco.api.money.Money;
 import committee.nova.atom.eco.common.config.ConfigUtil;
-import committee.nova.atom.eco.utils.PrintUtil;
+import committee.nova.atom.eco.utils.text.LogUtil;
 import net.minecraft.command.ICommandSource;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,7 +29,7 @@ public class MoneyItemManager {
         for (ItemStack stack : player.inventory.items) {
             if (stack.isEmpty()) continue;
             long worth = ConfigUtil.getItemStackWorth(stack);
-            PrintUtil.debug(stack.toString(), stack.getItem() instanceof Money.Item ? ((Money.Item) stack.getItem()).getType().toString() : "不是合法的货币");
+            LogUtil.debug(stack.toString(), stack.getItem() instanceof Money.Item ? ((Money.Item) stack.getItem()).getType().toString() : "不是合法的货币");
             value += worth * stack.getCount();
         }
         return value;
@@ -79,7 +79,7 @@ public class MoneyItemManager {
         List<Money> list = Eco.getSortedMoneyList();
         Money money = null;
         for(int i = 0; i < list.size(); i++){
-            PrintUtil.debug(list.get(i).getWorth(), list.get(i).getRegistryName());
+            LogUtil.debug(list.get(i).getWorth(), list.get(i).getRegistryName());
             while(amount - (money = list.get(i)).getWorth() >= 0){
                 ItemStack stack = money.getItemStack().copy();
                 if(hasSpace(player, false)){

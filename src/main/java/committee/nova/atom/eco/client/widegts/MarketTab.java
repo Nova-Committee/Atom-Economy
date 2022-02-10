@@ -1,6 +1,7 @@
 package committee.nova.atom.eco.client.widegts;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import committee.nova.atom.eco.Static;
 import committee.nova.atom.eco.api.market.MarketEntity;
 import committee.nova.atom.eco.utils.ScreenUtil;
 import net.minecraft.client.Minecraft;
@@ -88,7 +89,7 @@ public class MarketTab {
     }
 
     public void renderSelectedTab() {
-        Minecraft.getInstance().getTextureManager().bind(.GUI_TEXTURES);
+        Minecraft.getInstance().getTextureManager().bind(Static.GUI_TEXTURES);
         ScreenUtil.drawRect(rect.x, rect.y + 9, 0, 0, 100, rect.width - 1, 1);
     }
 }

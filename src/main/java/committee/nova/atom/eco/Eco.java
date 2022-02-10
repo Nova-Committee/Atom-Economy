@@ -8,7 +8,7 @@ import committee.nova.atom.eco.core.MarketDataManager;
 import committee.nova.atom.eco.init.ModBlocks;
 import committee.nova.atom.eco.init.ModItems;
 import committee.nova.atom.eco.utils.FileUtil;
-import committee.nova.atom.eco.utils.PrintUtil;
+import committee.nova.atom.eco.utils.text.LogUtil;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -80,10 +80,10 @@ public class Eco {
 
     public static void loadDataManager() {
         if (isDataManagerLoaded()) {
-            PrintUtil.debug("SKIPPING LOADING ATOMECO DATAMANAGER");
+            LogUtil.debug("SKIPPING LOADING ATOMECO DATAMANAGER");
             return;
         }
-        PrintUtil.debug("LOADING ATOMECO DATAMANAGER");
+        LogUtil.debug("LOADING ATOMECO DATAMANAGER");
         if (Eco.ACCOUNT_CACHE != null) {
             Eco.ACCOUNT_CACHE.saveAll();
             Eco.ACCOUNT_CACHE.clearAll();
@@ -98,7 +98,7 @@ public class Eco {
     }
 
     public static void unloadDataManager() {
-        PrintUtil.debug("UN-LOADING ATOMECO DATAMANAGER");
+        LogUtil.debug("UN-LOADING ATOMECO DATAMANAGER");
         if (Eco.ACCOUNT_CACHE != null) {
             Eco.ACCOUNT_CACHE.saveAll();
             Eco.ACCOUNT_CACHE.clearAll();

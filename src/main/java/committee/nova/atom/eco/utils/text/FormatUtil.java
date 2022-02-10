@@ -1,4 +1,4 @@
-package committee.nova.atom.eco.utils;
+package committee.nova.atom.eco.utils.text;
 
 import net.minecraft.util.text.StringTextComponent;
 

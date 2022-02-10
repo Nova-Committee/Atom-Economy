@@ -1,4 +1,4 @@
-package committee.nova.atom.eco.common.containers.slots;
+package committee.nova.atom.eco.api.common.containers.slots;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;

@@ -3,7 +3,7 @@ package committee.nova.atom.eco.api.account;
 import com.google.gson.JsonObject;
 import committee.nova.atom.eco.Eco;
 import committee.nova.atom.eco.core.MoneyItemManager;
-import committee.nova.atom.eco.utils.PrintUtil;
+import committee.nova.atom.eco.utils.text.LogUtil;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,12 +54,12 @@ public class GenericBank extends Bank {
                 if(sender == null){
                     log.sendMessage(new StringTextComponent("取款失败! 账户不存在."), UUID.randomUUID());
 
-                    PrintUtil.debug(log + "账户不存在.");
+                    LogUtil.debug(log + "账户不存在.");
                     return false;
                 }
                 if(amount <= 0){
                     log.sendMessage(new StringTextComponent("取款失败! 金额是空的或是负的. (T:" + amount + " || B:" + sender.getBalance() + ");"), UUID.randomUUID());
-                    PrintUtil.debug(((CommandSource)log).getDisplayName() + " 正在取出空的或是负的数额!");
+                    LogUtil.debug(((CommandSource) log).getDisplayName() + " 正在取出空的或是负的数额!");
                     return false;
                 }
                 player = (PlayerEntity) log;
@@ -76,19 +76,19 @@ public class GenericBank extends Bank {
                 }
                 log.sendMessage(new StringTextComponent("取款失败! 银行没有足够的钱. (W:" + amount + " || B:" + sender.getBalance() + ");"), UUID.randomUUID());
 
-                PrintUtil.debug(sender.getAsResourceLocation().toString() + " : 取款失败! 玩家没有足够的钱. (T:" + amount + " || F:" + fee + ");");
+                LogUtil.debug(sender.getAsResourceLocation().toString() + " : 取款失败! 玩家没有足够的钱. (T:" + amount + " || F:" + fee + ");");
                 return false;
             }
             case DEPOSIT:{
                 if(receiver == null){
                     log.sendMessage(new StringTextComponent("存款失败! 账户不存在."), UUID.randomUUID());
 
-                    PrintUtil.debug(((CommandSource)log).getDisplayName() + " -> player account is null.");
+                    LogUtil.debug(((CommandSource) log).getDisplayName() + " -> player account is null.");
                     return false;
                 }
                 if(amount <= 0){
                     log.sendMessage(new StringTextComponent("存款失败! 金额是空的或是负的. (T:" + amount + " || I:" + MoneyItemManager.countInInventory(log) + ");"), UUID.randomUUID());
-                    PrintUtil.debug(((CommandSource) log).getDisplayName() + " 正在存入空的或是负的数额!");
+                    LogUtil.debug(((CommandSource) log).getDisplayName() + " 正在存入空的或是负的数额!");
                     return false;
                 }
                 player = (PlayerEntity) log;
@@ -102,28 +102,28 @@ public class GenericBank extends Bank {
                         return true;
                     } else {
                         log.sendMessage(new StringTextComponent("存款失败! 背包里没有足够的钱. (D:" + amount + " || B:" + receiver.getBalance() + ");"), UUID.randomUUID());
-                        PrintUtil.log(receiver.getAsResourceLocation().toString() + ": 存款失败! 背包里没有足够的钱. (D:" + amount + " || B:" + receiver.getBalance() + ");");
+                        LogUtil.log(receiver.getAsResourceLocation().toString() + ": 存款失败! 背包里没有足够的钱. (D:" + amount + " || B:" + receiver.getBalance() + ");");
                         return false;
                     }
                 }
                 log.sendMessage(new StringTextComponent("存款失败! 存款超出了上限.. (D:" + amount + " || B:" + receiver.getBalance() + ");"), UUID.randomUUID());
-                PrintUtil.log(receiver.getAsResourceLocation().toString() + " : 存款失败! 存款超出了上限. (D:" + amount + " || B:" + receiver.getBalance() + ");");
+                LogUtil.log(receiver.getAsResourceLocation().toString() + " : 存款失败! 存款超出了上限. (D:" + amount + " || B:" + receiver.getBalance() + ");");
                 return false;
             }
             case TRANSFER:{
                 if(sender == null){
                     log.sendMessage(new StringTextComponent("转账失败! 发送方不存在."), UUID.randomUUID());
-                    PrintUtil.debug(((CommandSource)log).getDisplayName() + " -> 发送方不存在.");
+                    LogUtil.debug(((CommandSource) log).getDisplayName() + " -> 发送方不存在.");
                     return false;
                 }
                 if(receiver == null){
                     log.sendMessage(new StringTextComponent("转账失败! 收款方不存在."), UUID.randomUUID());
-                    PrintUtil.debug(((CommandSource)log).getDisplayName() + " -> 收款方不存在.");
+                    LogUtil.debug(((CommandSource) log).getDisplayName() + " -> 收款方不存在.");
                     return false;
                 }
                 if(amount <= 0){
                     log.sendMessage(new StringTextComponent("转账失败! 金额是空的或是负的. (T:" + amount + ");"), UUID.randomUUID());
-                    PrintUtil.debug(((CommandSource)log).getDisplayName() + " 正在转空的或是负的数额给 " + receiver.getAsResourceLocation().toString() + "!");
+                    LogUtil.debug(((CommandSource) log).getDisplayName() + " 正在转空的或是负的数额给 " + receiver.getAsResourceLocation().toString() + "!");
                     return false;
                 }
                 fee = fees == null ? 0 : parseFee(fees.get(sender.getType() + ":" + receiver.getType()), amount);
@@ -136,7 +136,7 @@ public class GenericBank extends Bank {
                 }
                 log.sendMessage(new StringTextComponent("转账失败! 没有足够的钱."), UUID.randomUUID());
 
-                PrintUtil.debug(sender.getAsResourceLocation().toString() + " -> " + sender.getAsResourceLocation().toString() + " : 转账失败! 发送方没有足够的钱. (T:" + amount + " || F:" + fee + ");");
+                LogUtil.debug(sender.getAsResourceLocation().toString() + " -> " + sender.getAsResourceLocation().toString() + " : 转账失败! 发送方没有足够的钱. (T:" + amount + " || F:" + fee + ");");
                 return false;
             }
             default:{
@@ -169,7 +169,7 @@ public class GenericBank extends Bank {
         }
         String str = s + " -> [A: " + amount + "] + [F: " + fee + (included ? "i" : "e") + "] == [R: " + total + "] -> " + r;
         Eco.LOGGER.info(str);
-        PrintUtil.debug(str);
+        LogUtil.debug(str);
 
     }
     @Override

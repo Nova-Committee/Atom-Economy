@@ -78,7 +78,7 @@ public class MarketDataManager {
 
     }
 
-    private static void createMarket(String type, String uuid, int index, String displayName, ItemStack itemStack, long amount, long value) {
+    public static void createMarket(String type, String uuid, int index, String displayName, ItemStack itemStack, long amount, long value) {
         createMarket(type, uuid, index, displayName, itemStack, amount, value, null);
     }
 

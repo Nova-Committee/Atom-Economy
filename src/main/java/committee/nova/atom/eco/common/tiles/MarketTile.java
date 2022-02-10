@@ -1,9 +1,9 @@
 package committee.nova.atom.eco.common.tiles;
 
+import committee.nova.atom.eco.api.common.tiles.MoneyTile;
 import committee.nova.atom.eco.api.market.MarketEntity;
 import committee.nova.atom.eco.api.security.ISecurity;
 import committee.nova.atom.eco.api.security.SecurityProfile;
-import committee.nova.atom.eco.common.tiles.base.MoneyTile;
 import committee.nova.atom.eco.core.MarketDataManager;
 import committee.nova.atom.eco.utils.math.Location;
 import net.minecraft.block.BlockState;
