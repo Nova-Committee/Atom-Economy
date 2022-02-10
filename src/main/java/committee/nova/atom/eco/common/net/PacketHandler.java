@@ -1,6 +1,8 @@
 package committee.nova.atom.eco.common.net;
 
 import committee.nova.atom.eco.Eco;
+import committee.nova.atom.eco.common.net.packets.ATMOthersActionPacket;
+import committee.nova.atom.eco.common.net.packets.ATMSelfActionPacket;
 import committee.nova.atom.eco.common.net.packets.ItemEditSetPacket;
 import committee.nova.atom.eco.common.net.packets.WalletPacket;
 import net.minecraft.entity.EntityType;
@@ -45,6 +47,8 @@ public class PacketHandler {
         );
         INSTANCE.registerMessage(nextID(), ItemEditSetPacket.class, ItemEditSetPacket::toBytes, ItemEditSetPacket::new, ItemEditSetPacket::handle);
         INSTANCE.registerMessage(nextID(), WalletPacket.class, WalletPacket::toBytes, WalletPacket::new, WalletPacket::handle);
+        INSTANCE.registerMessage(nextID(), ATMSelfActionPacket.class, ATMSelfActionPacket::toBytes, ATMSelfActionPacket::new, ATMSelfActionPacket::handle);
+        INSTANCE.registerMessage(nextID(), ATMOthersActionPacket.class, ATMOthersActionPacket::toBytes, ATMOthersActionPacket::new, ATMOthersActionPacket::handle);
 
     }
 
