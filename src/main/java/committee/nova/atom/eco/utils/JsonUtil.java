@@ -1,6 +1,7 @@
 package committee.nova.atom.eco.utils;
 
 import com.google.gson.*;
+import committee.nova.atom.eco.utils.text.LogUtil;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -118,7 +119,7 @@ public class JsonUtil {
             if(print_err){
                 e.printStackTrace();
             }
-            PrintUtil.console("File '" + file + "' seems to be missing, or has invalid format.");
+            LogUtil.console("File '" + file + "' seems to be missing, or has invalid format.");
             return def;
         }
     }

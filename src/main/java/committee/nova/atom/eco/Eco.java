@@ -1,13 +1,14 @@
 package committee.nova.atom.eco;
 
-import committee.nova.atom.eco.api.Money;
+import committee.nova.atom.eco.api.money.Money;
 import committee.nova.atom.eco.common.config.ConfigUtil;
 import committee.nova.atom.eco.common.net.PacketHandler;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
+import committee.nova.atom.eco.core.MarketDataManager;
 import committee.nova.atom.eco.init.ModBlocks;
 import committee.nova.atom.eco.init.ModItems;
 import committee.nova.atom.eco.utils.FileUtil;
-import committee.nova.atom.eco.utils.PrintUtil;
+import committee.nova.atom.eco.utils.text.LogUtil;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,8 +24,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
-import net.minecraftforge.server.permission.DefaultPermissionLevel;
-import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,9 +42,11 @@ public class Eco {
     public static final String MOD_ID = "atomeco";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static IForgeRegistry<Money> CURRENCY;
-    public static DataManager CACHE;
-    public static Path MAIN_FOLDER ;
+    public static AccountDataManager ACCOUNT_CACHE;
+    public static MarketDataManager MARKET_CACHE;
+    public static Path MAIN_DIR, ECO_DIR;
     private static Eco INSTANCE;
+
     public Eco() {
 
         INSTANCE = this;
@@ -77,36 +78,48 @@ public class Eco {
         }).collect(Collectors.toList());
     }
 
-    public static void loadDataManager(){
-        if(isDataManagerLoaded()){
-            PrintUtil.debug("SKIPPING LOADING ATOME DATAMANAGER");
+    public static void loadDataManager() {
+        if (isDataManagerLoaded()) {
+            LogUtil.debug("SKIPPING LOADING ATOMECO DATAMANAGER");
             return;
         }
-        PrintUtil.debug("LOADING ATOME DATAMANAGER");
-        if(Eco.CACHE != null){
-            Eco.CACHE.saveAll(); Eco.CACHE.clearAll();
+        LogUtil.debug("LOADING ATOMECO DATAMANAGER");
+        if (Eco.ACCOUNT_CACHE != null) {
+            Eco.ACCOUNT_CACHE.saveAll();
+            Eco.ACCOUNT_CACHE.clearAll();
         }
-        Eco.CACHE = new DataManager(MAIN_FOLDER.toFile());
+        if (Eco.MARKET_CACHE != null) {
+            Eco.MARKET_CACHE.saveAll();
+            Eco.MARKET_CACHE.clearAll();
+        }
+        Eco.ACCOUNT_CACHE = new AccountDataManager(ECO_DIR.toFile());
+        Eco.MARKET_CACHE = new MarketDataManager(ECO_DIR.toFile());
+
     }
 
-    public static void unloadDataManager(){
-        PrintUtil.debug("UN-LOADING ATOME DATAMANAGER");
-        if(Eco.CACHE != null){
-            Eco.CACHE.saveAll();
-            Eco.CACHE.clearAll();
-            Eco.CACHE = null;
+    public static void unloadDataManager() {
+        LogUtil.debug("UN-LOADING ATOMECO DATAMANAGER");
+        if (Eco.ACCOUNT_CACHE != null) {
+            Eco.ACCOUNT_CACHE.saveAll();
+            Eco.ACCOUNT_CACHE.clearAll();
+            Eco.ACCOUNT_CACHE = null;
+        }
+        if (Eco.MARKET_CACHE != null) {
+            Eco.MARKET_CACHE.saveAll();
+            Eco.MARKET_CACHE.clearAll();
+            Eco.MARKET_CACHE = null;
         }
     }
 
     public static boolean isDataManagerLoaded(){
-        return CACHE != null;
+        return (ACCOUNT_CACHE != null) && (MARKET_CACHE != null);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        MAIN_FOLDER = FMLPaths.GAMEDIR.get().resolve("atom");
-        FileUtil.checkFolder(MAIN_FOLDER);
-
-        PermissionAPI.registerNode("atom.economy.admin", DefaultPermissionLevel.OP, "Atom Economy Admin Permission");
+        MAIN_DIR = FMLPaths.GAMEDIR.get().resolve("atom");
+        FileUtil.checkFolder(MAIN_DIR);
+        ECO_DIR = MAIN_DIR.resolve("economy");
+        FileUtil.checkFolder(ECO_DIR);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -128,8 +141,7 @@ public class Eco {
 
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
-        // do something when the server starts
-        LOGGER.info("HELLO from server starting");
+
     }
 
 

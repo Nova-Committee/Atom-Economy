@@ -114,19 +114,7 @@ public class ATMTransferScreen extends AbstractScreenPage<ATMContainer>{
 
             lastTickSearch = search.getValue();
         }
-        else if(search.getValue().equals(null)){
 
-            accountList.children().clear();
-
-            accountList.children().add(defaultAccountEntry);
-
-
-            container.gatherAccountAction().forEach(
-                    t-> accountList.children().add( new AccountList.AccountEntry("player", t.getId(),  accountList, this::onAccountEntrySelected))
-            );
-
-            lastTickSearch = search.getValue();
-        }
     }
 
     private void transferAct(){
@@ -146,10 +134,8 @@ public class ATMTransferScreen extends AbstractScreenPage<ATMContainer>{
 
     private void onAccountEntrySelected(AccountList.AccountEntry entry)
     {
-
         transfer.active = true;
         this.to_id = entry.getId();
-        container.player.sendMessage(new StringTextComponent(to_id), UUID.randomUUID());
-
+        //container.player.sendMessage(new StringTextComponent(to_id), UUID.randomUUID());
     }
 }

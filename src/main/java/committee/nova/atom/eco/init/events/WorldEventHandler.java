@@ -3,10 +3,10 @@ package committee.nova.atom.eco.init.events;
 import com.mojang.authlib.GameProfile;
 import committee.nova.atom.eco.Eco;
 import committee.nova.atom.eco.Static;
-import committee.nova.atom.eco.api.Account;
-import committee.nova.atom.eco.api.AccountPermission;
+import committee.nova.atom.eco.api.account.Account;
+import committee.nova.atom.eco.api.account.AccountPermission;
 import committee.nova.atom.eco.common.config.ModConfig;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,26 +43,26 @@ public class WorldEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onSearchAccounts(ATMEvent.SearchAccounts event){
         if(!event.getSearchedType().equals("player")){
-            if(!contains(event.getAccountsMap(), event.getSearchedType()) && DataManager.exists(event.getSearchedType(), event.getSearchedId())){
+            if (!contains(event.getAccountsMap(), event.getSearchedType()) && AccountDataManager.exists(event.getSearchedType(), event.getSearchedId())) {
                 put(event.getAccountsMap(), event.getSearchedType() + ":" + event.getSearchedId());
             }
             return;
         }
-        for(Account account : DataManager.getAccountsOfType("player").values()){
-            if(account.getId().contains(event.getSearchedId()) || account.getName().contains(event.getSearchedId())){
+        for (Account account : AccountDataManager.getAccountsOfType("player").values()) {
+            if (account.getId().contains(event.getSearchedId()) || account.getName().contains(event.getSearchedId())) {
                 event.getAccountsMap().put(account.getTypeAndId(), new AccountPermission(account));
             }
         }
-        if(ModConfig.COMMON.PARTIAL_ACCOUNT_NAME_SEARCH.get()){
-            for(String str : Static.getSERVER().getPlayerNames()){
-                if(str.contains(event.getSearchedId()) && !event.getAccountsMap().containsKey("player:" + str)){
+        if (ModConfig.COMMON.partialAccountNameSearch.get()) {
+            for (String str : Static.getSERVER().getPlayerNames()) {
+                if (str.contains(event.getSearchedId()) && !event.getAccountsMap().containsKey("player:" + str)) {
                     GameProfile gp = Static.getSERVER().getProfileCache().get(str);
-                    if(gp == null) continue;
+                    if (gp == null) continue;
                     putIn(event.getAccountsMap(), "player:" + gp.getId().toString());
                 }
             }
-            File folder = new File(DataManager.ACCOUNT_DIR, "player/");
-            if(!folder.exists()) return;
+            File folder = new File(AccountDataManager.ACCOUNT_DIR, "player/");
+            if (!folder.exists()) return;
             String str = null;
             for(File file : folder.listFiles()){
                 if(file.isDirectory() || file.isHidden()) continue;
@@ -73,10 +73,9 @@ public class WorldEventHandler {
         }
         else{
             GameProfile gp = Static.getSERVER().getProfileCache().get(event.getSearchedId());
-            if(gp != null && new File(DataManager.ACCOUNT_DIR, "player/" + gp.getId().toString() + ".json").exists()){
+            if (gp != null && new File(AccountDataManager.ACCOUNT_DIR, "player/" + gp.getId().toString() + ".json").exists()) {
                 put(event.getAccountsMap(), "player:" + gp.getId().toString());
-            }
-            else if(new File(DataManager.ACCOUNT_DIR, "player/" + event.getSearchedId() + ".json").exists()){
+            } else if (new File(AccountDataManager.ACCOUNT_DIR, "player/" + event.getSearchedId() + ".json").exists()) {
                 put(event.getAccountsMap(), "player:" + event.getSearchedId());
             }
         }

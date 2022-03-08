@@ -14,7 +14,6 @@ public class Static {
     public static final String MOD_ID = "atomlib";
 
     public static final ResourceLocation GUI_TEXTURES = new ResourceLocation(MOD_ID + ":textures/gui/gui_textures.png");
-
     public static boolean mclib = false;
     public static boolean devmode = false;
     public static boolean server = false;

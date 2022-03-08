@@ -1,12 +1,15 @@
 package committee.nova.atom.eco.common.containers;
 
 
-import committee.nova.atom.eco.api.Account;
-import committee.nova.atom.eco.api.AccountPermission;
-import committee.nova.atom.eco.api.Bank;
+import committee.nova.atom.eco.api.account.Account;
+import committee.nova.atom.eco.api.account.AccountPermission;
+import committee.nova.atom.eco.api.account.Bank;
 import committee.nova.atom.eco.common.config.ConfigUtil;
+import committee.nova.atom.eco.common.net.PacketHandler;
+import committee.nova.atom.eco.common.net.packets.ATMOthersActionPacket;
+import committee.nova.atom.eco.common.net.packets.ATMSelfActionPacket;
 import committee.nova.atom.eco.common.tiles.ATMTile;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
 import committee.nova.atom.eco.init.ModContainers;
 import committee.nova.atom.eco.init.events.ATMEvent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,8 +49,8 @@ public class ATMContainer extends Container {
     public ATMContainer(int id, PlayerInventory inventory, ATMTile tileEntity) {
         super(ModContainers.ATM, id);
         this.player = inventory.player;
-        perm =  AccountPermission.FULL;
-        account =  DataManager.getAccount("player", player.getStringUUID(), false);
+        perm = AccountPermission.FULL;
+        account = AccountDataManager.getAccount("player", player.getStringUUID(), false);
         //receiver = DataManager.getAccount("player", toId, false);
 
     }
@@ -57,18 +60,22 @@ public class ATMContainer extends Container {
         return (ATMTile) tileAtPos;
     }
 
-    public boolean processSelfAction(long amount, boolean deposit){
-        if(amount <= 0) return false;
-        String dep = deposit ? "存入" : "取款";
-        Bank bank = DataManager.getBank(account.getBankId(), true);
-        assert bank != null;
-        if(bank.processAction(deposit ? Bank.Action.DEPOSIT : Bank.Action.WITHDRAW, player, account, amount, account, false)){
-            player.sendMessage(new StringTextComponent(dep  + ConfigUtil.getWorthAsString(amount, false) + " 金额执行中."), UUID.randomUUID());
+    public boolean processSelfAction(long amount, boolean deposit) {
+        if (player.level.isClientSide) {
+            PacketHandler.INSTANCE.sendToServer(new ATMSelfActionPacket(amount, deposit));
             return true;
-        }
-        else{
-            player.sendMessage(new StringTextComponent( dep + " 失败了."), UUID.randomUUID());
-            return false;
+        } else {
+            if (amount <= 0) return false;
+            String dep = deposit ? "存入" : "取款";
+            Bank bank = AccountDataManager.getBank(account.getBankId(), true);
+            assert bank != null;
+            if (bank.processAction(deposit ? Bank.Action.DEPOSIT : Bank.Action.WITHDRAW, player, account, amount, account, false)) {
+                player.sendMessage(new StringTextComponent(dep + ConfigUtil.getWorthAsString(amount, false) + " 金额执行中."), UUID.randomUUID());
+                return true;
+            } else {
+                player.sendMessage(new StringTextComponent(dep + " 失败了."), UUID.randomUUID());
+                return false;
+            }
         }
     }
 
@@ -79,37 +86,42 @@ public class ATMContainer extends Container {
         return findAccount;
     }
 
-    public ArrayList<AccountPermission> gatherAccountAction(){
+    public ArrayList<AccountPermission> gatherAccountAction() {
         ATMEvent.GatherAccounts event = new ATMEvent.GatherAccounts(player);
         MinecraftForge.EVENT_BUS.post(event);
         gatherAccount.addAll(event.getAccountsList());
         return gatherAccount;
     }
 
-    public boolean processOthersAction(String id,long amount){
-        Account receiver = DataManager.getAccount("player", id, true);
-        if(amount <= 0) {
-            player.sendMessage(new StringTextComponent("输入的金额不能小于等于0"),UUID.randomUUID());
-            return false;
-        }
-        if(!perm.transfer){
-            player.sendMessage(new StringTextComponent("没有转账的权限"),UUID.randomUUID());
-            return false;
-        }
-        if(receiver == null){
-            player.sendMessage(new StringTextComponent("请选择收款方"),UUID.randomUUID());
-            return false;
-        }
-        Bank bank = DataManager.getBank(account.getBankId(), true);
-        if(bank.processAction(Bank.Action.TRANSFER, player, account, amount, receiver, false)){
-            player.sendMessage(new StringTextComponent("转账" + ConfigUtil.getWorthAsString(amount, false) + " 金额成功执行."), UUID.randomUUID() );
-            player.closeContainer();
+    public boolean processOthersAction(String id, long amount) {
+        if (player.level.isClientSide) {
+            PacketHandler.INSTANCE.sendToServer(new ATMOthersActionPacket(id, amount));
             return true;
+        } else {
+            Account receiver = AccountDataManager.getAccount("player", id, true);
+            if (amount <= 0) {
+                player.sendMessage(new StringTextComponent("输入的金额不能小于等于0"), UUID.randomUUID());
+                return false;
+            }
+            if (!perm.transfer) {
+                player.sendMessage(new StringTextComponent("没有转账的权限"), UUID.randomUUID());
+                return false;
+            }
+            if (receiver == null) {
+                player.sendMessage(new StringTextComponent("请选择收款方"), UUID.randomUUID());
+                return false;
+            }
+            Bank bank = AccountDataManager.getBank(account.getBankId(), true);
+            if (bank.processAction(Bank.Action.TRANSFER, player, account, amount, receiver, false)) {
+                player.sendMessage(new StringTextComponent("转账" + ConfigUtil.getWorthAsString(amount, false) + " 金额成功执行."), UUID.randomUUID());
+                player.closeContainer();
+                return true;
+            } else {
+                player.sendMessage(new StringTextComponent("转账失败"), UUID.randomUUID());
+                return false;
+            }
         }
-        else{
-            player.sendMessage(new StringTextComponent("转账失败"),UUID.randomUUID());
-            return  false;
-        }
+
     }
 
 

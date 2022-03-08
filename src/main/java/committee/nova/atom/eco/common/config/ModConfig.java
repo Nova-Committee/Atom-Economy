@@ -38,30 +38,32 @@ public class ModConfig {
 
     public static class Common {
 
-        public static ForgeConfigSpec.ConfigValue<String> DEFAULT_BANK, CURRENCY_SIGN;
-        public final ForgeConfigSpec.ConfigValue<Integer> STARTING_BALANCE, UNLOAD_FREQUENCY, MIN_SEARCH_CHARS;
-        public final ForgeConfigSpec.ConfigValue<Boolean> NOTIFY_BALANCE_ON_JOIN, SHOW_CENTESIMALS, SHOW_DECIMALS, ENABLE_BANK_CARDS,
-                                                    SHOW_ITEM_WORTH_IN_TOOLTIP,PARTIAL_ACCOUNT_NAME_SEARCH;
+        public final ForgeConfigSpec.ConfigValue<String> defaultBank, currencySign;
+        public final ForgeConfigSpec.ConfigValue<Integer> startingBalance, unloadFrequency, minSearchChars;
+        public final ForgeConfigSpec.ConfigValue<Boolean> notifyBalanceOnJoin, showCentesimals, showDecimals, enableBankCards,
+                showItemWorthInTooltip, partialAccountNameSearch;
+        public final ForgeConfigSpec.ConfigValue<Integer> walletCurrencyCapacity;
 
 
+        public Common(ForgeConfigSpec.Builder builder) {
 
-        public Common(ForgeConfigSpec.Builder builder){
+            startingBalance = builder.comment("初始的金额").defineInRange("", 10000, 0, Integer.MAX_VALUE);
+            unloadFrequency = builder.comment("保存间隔").defineInRange("", 600000, Static.dev() ? 30000 : 60000, 86400000 / 2);
+            minSearchChars = builder.comment("最少搜索时输入的字符").defineInRange("", 3, 1, 1000);
 
-            STARTING_BALANCE = builder.comment("初始的金额").defineInRange("",10000, 0, Integer.MAX_VALUE);
-            UNLOAD_FREQUENCY = builder.comment("保存间隔").defineInRange("",600000, Static.dev() ? 30000 : 60000, 86400000 / 2);
-            MIN_SEARCH_CHARS = builder.comment("最少搜索时输入的字符").defineInRange("",3, 1, 1000);
+            walletCurrencyCapacity = builder.comment("钱包的容量")
+                    .defineInRange("walletCurrencyCapacity", 1000000, 0, 99999999);
 
 
+            defaultBank = builder.comment("默认的银行uuid").define("default_bank", "00000000");
+            currencySign = builder.comment("可以自定义货币符号").define("currency_sign", "￥");
 
-            DEFAULT_BANK = builder.comment("默认的银行uuid").define("default_bank", "00000000");
-            CURRENCY_SIGN = builder.comment("可以自定义货币符号").define("currency_sign","￥");
-
-            NOTIFY_BALANCE_ON_JOIN = builder.comment("加入游戏时提醒余额").define("notify_balance_on_join", true);
-            SHOW_CENTESIMALS = builder.comment("是否格式化显示? 实例:'29,503' / '29.503'").define("show_centesimals", false);
-            SHOW_DECIMALS = builder.comment("是否显示小数点后几位? 实例: '234.00'").define("show_decimals", false);
-            ENABLE_BANK_CARDS = builder.define("", true);
-            SHOW_ITEM_WORTH_IN_TOOLTIP = builder.comment("是否在提示栏显示物品的价值").define("show_item_worth",true);
-            PARTIAL_ACCOUNT_NAME_SEARCH = builder.comment("true,可以通过仅输入部分名称来搜索帐户/false,则需要完整的名字").define("partial_account_name_search",true);
+            notifyBalanceOnJoin = builder.comment("加入游戏时提醒余额").define("notify_balance_on_join", true);
+            showCentesimals = builder.comment("是否格式化显示? 实例:'29,503' / '29.503'").define("show_centesimals", false);
+            showDecimals = builder.comment("是否显示小数点后几位? 实例: '234.00'").define("show_decimals", false);
+            enableBankCards = builder.define("", true);
+            showItemWorthInTooltip = builder.comment("是否在提示栏显示物品的价值").define("show_item_worth", true);
+            partialAccountNameSearch = builder.comment("true,可以通过仅输入部分名称来搜索帐户/false,则需要完整的名字").define("partial_account_name_search", true);
 
         }
 
@@ -92,17 +94,17 @@ public class ModConfig {
 
         public CompoundNBT toNBT() {
             CompoundNBT compound = new CompoundNBT();
-            compound.putInt("starting_balance", COMMON.STARTING_BALANCE.get());
-            compound.putInt("unload_frequency", COMMON.UNLOAD_FREQUENCY.get());
-            compound.putString("default_bank", Common.DEFAULT_BANK.get());
-            compound.putString("currency_sign", Common.CURRENCY_SIGN.get());
-            compound.putBoolean("notify_balance_on_join", COMMON.NOTIFY_BALANCE_ON_JOIN.get());
-            compound.putBoolean("show_centesimals", COMMON.SHOW_CENTESIMALS.get());
-            compound.putBoolean("enable_bank_cards", COMMON.ENABLE_BANK_CARDS.get());
-            compound.putBoolean("show_item_worth_in_tooltip", COMMON.SHOW_ITEM_WORTH_IN_TOOLTIP.get());
-            compound.putBoolean("partial_account_name_search", COMMON.PARTIAL_ACCOUNT_NAME_SEARCH.get());
-            compound.putBoolean("show_decimals", COMMON.SHOW_DECIMALS.get());
-            compound.putInt("min_search_chars", COMMON.MIN_SEARCH_CHARS.get());
+            compound.putInt("starting_balance", COMMON.startingBalance.get());
+            compound.putInt("unload_frequency", COMMON.unloadFrequency.get());
+            compound.putString("default_bank", COMMON.defaultBank.get());
+            compound.putString("currency_sign", COMMON.currencySign.get());
+            compound.putBoolean("notify_balance_on_join", COMMON.notifyBalanceOnJoin.get());
+            compound.putBoolean("show_centesimals", COMMON.showCentesimals.get());
+            compound.putBoolean("enable_bank_cards", COMMON.enableBankCards.get());
+            compound.putBoolean("show_item_worth_in_tooltip", COMMON.showItemWorthInTooltip.get());
+            compound.putBoolean("partial_account_name_search", COMMON.partialAccountNameSearch.get());
+            compound.putBoolean("show_decimals", COMMON.showDecimals.get());
+            compound.putInt("min_search_chars", COMMON.minSearchChars.get());
             return compound;
         }
     }

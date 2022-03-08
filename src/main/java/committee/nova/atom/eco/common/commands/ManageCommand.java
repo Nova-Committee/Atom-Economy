@@ -4,9 +4,9 @@ import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import committee.nova.atom.eco.Eco;
-import committee.nova.atom.eco.api.Account;
+import committee.nova.atom.eco.api.account.Account;
 import committee.nova.atom.eco.common.config.ConfigUtil;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -39,7 +39,7 @@ public class ManageCommand {
             ServerPlayerEntity args1 = EntityArgument.getPlayer(context, "player");
             UUID playerId = args1.getUUID();
             long args2 = context.getArgument("amount", Long.class);
-            Account account = DataManager.getAccount("player" , playerId.toString(), false);
+            Account account = AccountDataManager.getAccount("player", playerId.toString(), false);
             if(account == null){
                 sender.sendSuccess(new StringTextComponent("账户未找到"), false);
             }

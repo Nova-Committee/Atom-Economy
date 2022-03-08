@@ -3,11 +3,11 @@ package committee.nova.atom.eco.common.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import committee.nova.atom.eco.Eco;
-import committee.nova.atom.eco.api.Money;
+import committee.nova.atom.eco.api.account.GenericBank;
+import committee.nova.atom.eco.api.money.GenericMoney;
+import committee.nova.atom.eco.api.money.Money;
 import committee.nova.atom.eco.common.items.GenericMoneyItem;
-import committee.nova.atom.eco.core.GenericBank;
-import committee.nova.atom.eco.core.GenericMoney;
-import committee.nova.atom.eco.data.DataManager;
+import committee.nova.atom.eco.core.AccountDataManager;
 import committee.nova.atom.eco.utils.ItemUtil;
 import committee.nova.atom.eco.utils.JsonUtil;
 import net.minecraft.item.Item;
@@ -30,9 +30,9 @@ import java.util.TreeMap;
 public class ConfigUtil {
     private static final TreeMap<String, Long> DEFAULT = new TreeMap<String, Long>();
     private static JsonArray DEF_BANKS;
-    private static Item MONEY;
+    public static Item MONEY;
     private static TreeMap<ResourceLocation, Long> EXTERNAL_ITEMS = new TreeMap<>();
-    private static TreeMap<String, Long> EXTERNAL_ITEMS_METAWORTH = new TreeMap<>();
+    private static TreeMap<String, Long> EXTERNAL_ITEMS_WORTH = new TreeMap<>();
 
     static {
         DEFAULT.put("1yuan", 1000L);
@@ -64,7 +64,6 @@ public class ConfigUtil {
                 registry.registerAll(
                        MONEY = new GenericMoneyItem(money).setRegistryName( money.getRegistryName().getPath())
                 );
-                //FCLRegistry.getAutoRegistry("Eco").addItem(money.getRegistryName().getPath(), new GenericMoneyItem(money), 1, null);
                 money.stackload(ItemUtil.getByNameOrId("atomeco:" + money.getRegistryName().getPath()), elm.getAsJsonObject(), true);
             });
         }
@@ -78,9 +77,9 @@ public class ConfigUtil {
         if(DEF_BANKS == null) return;
         DEF_BANKS.forEach((elm) -> {
             String uuid = elm.getAsJsonObject().get("uuid").getAsString();
-            File file = new File(DataManager.BANK_DIR, uuid + ".json");
-            if(!file.exists() && !DataManager.getBanks().containsKey(uuid)){
-                DataManager.addBank(new GenericBank(elm.getAsJsonObject()));
+            File file = new File(AccountDataManager.BANK_DIR, uuid + ".json");
+            if (!file.exists() && !AccountDataManager.getBanks().containsKey(uuid)) {
+                AccountDataManager.addBank(new GenericBank(elm.getAsJsonObject()));
             }
         });
     }
@@ -97,18 +96,23 @@ public class ConfigUtil {
         //
         JsonArray banks = new JsonArray();
         JsonObject def = new JsonObject();
-        def.addProperty("uuid", ModConfig.Common.DEFAULT_BANK.get());
+        def.addProperty("uuid", ModConfig.COMMON.defaultBank.get());
         def.addProperty("name", "Default Server Bank");
         def.add("data", new JsonObject());
         banks.add(def);
         obj.add("Banks", banks);
         //
         JsonObject extexp = new JsonObject();
+        JsonObject baoshi = new JsonObject();
         JsonArray ext = new JsonArray();
         extexp.addProperty("id", "minecraft:nether_star");
         extexp.addProperty("worth", 100000);
         extexp.addProperty("register", false);
+        baoshi.addProperty("id", "minecraft:emerald");
+        baoshi.addProperty("worth", 1000);
+        baoshi.addProperty("register", false);//是否注册成货币
         ext.add(extexp);
+        ext.add(baoshi);
         obj.add("ExternalItems", ext);
         //
         return obj;
@@ -125,10 +129,11 @@ public class ConfigUtil {
     public static String getWorthAsString(long value, boolean append, boolean ignore){
         String str = value + "";
         if(value < 1000){
-            if(!ModConfig.COMMON.SHOW_DECIMALS.get() && (value == 0 || (!ModConfig.COMMON.SHOW_DECIMALS.get() && !ignore && value < 100))) return "0" + (append ? ModConfig.Common.CURRENCY_SIGN.get() : "");
+            if (!ModConfig.COMMON.showDecimals.get() && (value == 0 || (!ModConfig.COMMON.showDecimals.get() && !ignore && value < 100)))
+                return "0" + (append ? ModConfig.COMMON.currencySign.get() : "");
             str = value + "";
             str = str.length() == 1 ? "00" + str : str.length() == 2 ? "0" + str : str;
-            return ((str = "0" + ModConfig.DOT + str).length() == 5 && (!ignore && !ModConfig.COMMON.SHOW_DECIMALS.get()) ? str.substring(0, 4) : str) + (append ? ModConfig.Common.CURRENCY_SIGN.get() : "");
+            return ((str = "0" + ModConfig.DOT + str).length() == 5 && (!ignore && !ModConfig.COMMON.showDecimals.get()) ? str.substring(0, 4) : str) + (append ? ModConfig.COMMON.currencySign.get() : "");
         }
         else{
             try{
@@ -139,7 +144,7 @@ public class ConfigUtil {
                     str += arr[i] + ((i >= arr.length - 1) ? "" :  ModConfig.COMMA);
                 }
                 str = new StringBuilder(str).reverse().toString();
-                return (str = ModConfig.COMMON.SHOW_DECIMALS.get() ? ModConfig.COMMON.SHOW_CENTESIMALS.get() || ignore ? str : str.substring(0, str.length() - 1) : str.substring(0, str.lastIndexOf(ModConfig.DOT))) + (append ? ModConfig.Common.CURRENCY_SIGN.get() : "");
+                return (str = ModConfig.COMMON.showDecimals.get() ? ModConfig.COMMON.showCentesimals.get() || ignore ? str : str.substring(0, str.length() - 1) : str.substring(0, str.lastIndexOf(ModConfig.DOT))) + (append ? ModConfig.COMMON.currencySign.get() : "");
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -148,14 +153,14 @@ public class ConfigUtil {
         }
     }
 
-    public static final long getItemStackWorth(ItemStack stack){
-        if(stack.getItem() instanceof Money.Item){
-            return ((Money.Item)stack.getItem()).getWorth(stack);
+    public static final long getItemStackWorth(ItemStack stack) {
+        if (stack.getItem() instanceof Money.Item) {
+            return ((Money.Item) stack.getItem()).getWorth();
         }
-        if(EXTERNAL_ITEMS_METAWORTH.containsKey(stack.getItem().getRegistryName())){
-            return EXTERNAL_ITEMS_METAWORTH.get(stack.getItem().getRegistryName());
+        if (EXTERNAL_ITEMS_WORTH.containsKey(stack.getItem().getRegistryName())) {
+            return EXTERNAL_ITEMS_WORTH.get(stack.getItem().getRegistryName());
         }
-        if(EXTERNAL_ITEMS.containsKey(stack.getItem().getRegistryName())){
+        if (EXTERNAL_ITEMS.containsKey(stack.getItem().getRegistryName())) {
             return EXTERNAL_ITEMS.get(stack.getItem().getRegistryName());
         }
         return 0;
@@ -164,7 +169,7 @@ public class ConfigUtil {
     public static boolean containsAsExternalItemStack(ItemStack stack){
         try{
             return EXTERNAL_ITEMS.containsKey(stack.getItem().getRegistryName())
-                    || EXTERNAL_ITEMS_METAWORTH.containsKey(stack.getItem().getRegistryName());
+                    || EXTERNAL_ITEMS_WORTH.containsKey(stack.getItem().getRegistryName());
         }
         catch(Exception e){
             e.printStackTrace();
@@ -187,10 +192,10 @@ public class ConfigUtil {
                     JsonObject jsn = elm.getAsJsonObject();
                     ResourceLocation rs = new ResourceLocation(jsn.get("id").getAsString());
                     long worth = jsn.get("worth").getAsLong();
-                        EXTERNAL_ITEMS_METAWORTH.put(rs.toString(), worth);
-                        if(!EXTERNAL_ITEMS.containsKey(rs)){
-                            EXTERNAL_ITEMS.put(rs, 0L);
-                        }
+                    EXTERNAL_ITEMS_WORTH.put(rs.toString(), worth);
+                    if(!EXTERNAL_ITEMS.containsKey(rs)){
+                        EXTERNAL_ITEMS.put(rs, 0L);
+                    }
                     else{
                         EXTERNAL_ITEMS.put(rs, worth);
                     }
